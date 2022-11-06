@@ -22,13 +22,13 @@ bot.command("price", async (ctx) => {
   const usecase = buscaPreco();
 
   await usecase.authorize();
-  const { ok: response } = await usecase.run({ ticker });
+  const ucResponse = await usecase.run({ ticker });
 
-  if (response.err) {
-    return ctx.reply(response.err);
+  if (ucResponse.err) {
+    return ctx.reply(ucResponse.err);
   }
 
-  const { lastPrice, change } = response;
+  const { lastPrice, change } = ucResponse.ok;
 
   const message = `O preço da ação ${ticker} é R$ ${lastPrice} sendo a variação no dia de ${change}%`;
 
@@ -46,13 +46,13 @@ bot.command("graham", async (ctx) => {
   const usecase = calcularPrecoJusto();
 
   await usecase.authorize();
-  const { ok: response } = await usecase.run({ ticker });
+  const ucResponse = await usecase.run({ ticker });
 
-  if (response.err) {
-    return ctx.reply(response.err);
+  if (ucResponse.err) {
+    return ctx.reply(ucResponse.err);
   }
 
-  const { precoJusto, resultado, descontoOuAgio, precoDaAcao } = response;
+  const { precoJusto, resultado, descontoOuAgio, precoDaAcao } = ucResponse.ok;
 
   const message = `O preço justo da ação ${ticker} segundo a fórmula de graham é: R$ ${precoJusto} \nCom um ${resultado} de ${descontoOuAgio}% \nPreço: ${precoDaAcao}`;
 

@@ -18,12 +18,8 @@ class MFinanceClient {
   buscarPrecoAcao(ticker) {
     return this._axios
       .get(`stocks/${ticker}`)
-      .then(({ data }) => {
-        return Ok(data);
-      })
-      .catch((error) => {
-        return Err(error);
-      });
+      .then(({ data }) => Ok(data))
+      .catch((error) => Err(error));
   }
 
   buscarIndicadoresAcao(ticker) {
