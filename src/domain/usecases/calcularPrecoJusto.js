@@ -1,11 +1,9 @@
-// ts-check
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
-const axios = require("axios");
+const { TickerRequest } = require("../entities/ticker");
+const { MFinanceClient } = require("../../infra/repositories/mFinanceClient");
 
 const dependency = {
-  axios: axios.create({
-    baseURL: "https://mfinance.com.br/api/v1/",
-  }),
+  mfinance: new MFinanceClient(),
 };
 
 const calcularPrecoJusto = (injection) =>
@@ -18,9 +16,10 @@ const calcularPrecoJusto = (injection) =>
 
     "Verifica a requisição": step((ctx) => {
       const { ticker } = ctx.req;
-      const regex = /([A-Z]{4}[1-9])/gm;
+      const tickerRequest = new TickerRequest();
+      tickerRequest.ticker = ticker;
 
-      if (!regex.test(ticker)) return Err("Ticker inválido");
+      if (!tickerRequest.isValid()) return Err("Ticker inválido");
 
       return Ok();
     }),
@@ -28,22 +27,24 @@ const calcularPrecoJusto = (injection) =>
     "Puxa as informações da ação da API": step({
       "Puxa o preço da ação": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const { axios } = ctx.di;
+        const { mfinance } = ctx.di;
 
-        const { data: dadosDePreco } = await axios.get(`stocks/${ticker}`);
+        const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker)
 
-        if (dadosDePreco.lastPrice == 0) return Err("Provavelmente o ticker está incorreto");
+        if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);
+        if (dadosDePrecoRequest.ok.lastPrice == 0) return Err("Provavelmente o ticker está incorreto");
 
-        ctx.data.dadosDePreco = dadosDePreco;
+        ctx.data.dadosDePreco = dadosDePrecoRequest.ok;
         return Ok();
       }),
       "Puxa os indicadores da açao": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const { axios } = ctx.di;
+        const { mfinance } = ctx.di;
 
-        const { data: indicadoresDaAcao } = await axios.get(`stocks/indicators/${ticker}`);
+        const indicadoresDaAcaoRequest = await mfinance.buscarIndicadoresAcao(ticker);
+        if(indicadoresDaAcaoRequest.isErr) return Err(`Erro ao buscar indicadores da ação ${ticker}`);
 
-        ctx.data.indicadoresDaAcao = indicadoresDaAcao;
+        ctx.data.indicadoresDaAcao = indicadoresDaAcaoRequest.ok;
 
         return Ok();
       }),

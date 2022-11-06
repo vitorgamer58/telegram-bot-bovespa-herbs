@@ -17,11 +17,11 @@
   "license": "MIT",
   "devDependencies": {
     "@herbsjs/aloe": "^1.0.2",
-    "axios-mock-adapter": "^1.21.2",
     "nodemon": "^2.0.20",
     "prettier": "2.7.1"
   },
   "dependencies": {
+    "@herbsjs/gotu": "^1.2.0",
     "@herbsjs/herbarium": "^1.4.0",
     "@herbsjs/herbs": "^1.6.2",
     "axios": "^1.1.2",

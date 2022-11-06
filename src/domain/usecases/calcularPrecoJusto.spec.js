@@ -1,36 +1,55 @@
-const { spec, scenario, given, check, when } = require("@herbsjs/aloe");
+const { spec, scenario, given, check } = require("@herbsjs/aloe");
 const { herbarium } = require("@herbsjs/herbarium");
+const { Ok } = require("@herbsjs/herbs");
 const assert = require("assert");
 const calcularPrecoJusto = require("./calcularPrecoJusto");
-const axios = require("axios");
-const MockAdapter = require("axios-mock-adapter");
 
-const mockedAxios = new MockAdapter(axios);
-mockedAxios.onGet("stocks/ABCD3").reply(200, {
-  lastPrice: 100,
-});
-mockedAxios.onGet("stocks/indicators/ABCD3").reply(200, {
-  bookValuePerShare: {
-    value: 90,
+const TickerForTest = "ABCD3";
+
+const MFinanceClient = {
+  buscarPrecoAcao: (ticker) => {
+    assert.deepEqual(ticker, TickerForTest);
+    return Ok({ lastPrice: 100 });
   },
-  earningsPerShare: {
-    value: 12,
+  buscarIndicadoresAcao: (ticker) => {
+    assert.deepEqual(ticker, TickerForTest);
+    return Ok({
+      bookValuePerShare: {
+        value: 90,
+      },
+      earningsPerShare: {
+        value: 12,
+      },
+    });
   },
-});
+};
 
 const calculaPrecoJustoSpec = spec({
   usecase: calcularPrecoJusto,
 
   "Deve calcular o preço justo": scenario({
     "Dado uma ação válida": given({
-      request: { ticker: "ABCD3" },
-      injection: { axios },
+      request: { ticker: TickerForTest },
+      injection: { mfinance: MFinanceClient },
     }),
     "Deve rodar sem erros": check((ctx) => {
       assert.ok(ctx.response.isOk);
     }),
     "Deve retornar o preço justo": check((ctx) => {
       assert.ok(ctx.response.value.precoJusto == "155.88");
+    }),
+  }),
+
+  "Deve retornar erro se o ticker da ação for inválido": scenario({
+    "Dado um ticker inválido": given({
+      request: { ticker: "a1" },
+      injection: { mfinance: MFinanceClient },
+    }),
+    "Deve retornar erro": check((ctx) => {
+      assert.ok(!ctx.response.isOk);
+    }),
+    "Deve retornar mensagem de erro": check((ctx) => {
+      assert.deepEqual(ctx.response.err, "Ticker inválido");
     }),
   }),
 });
