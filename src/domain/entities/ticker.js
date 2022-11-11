@@ -1,4 +1,3 @@
-const { herbarium } = require("@herbsjs/herbarium");
 const { entity, field } = require("@herbsjs/herbs");
 
 const TickerRequest = entity("TickerRequest", {
@@ -13,4 +12,4 @@ const TickerRequest = entity("TickerRequest", {
   }),
 });
 
-module.exports.TickerRequest = herbarium.entities.add(TickerRequest, "TickerRequest").entity;
+module.exports = TickerRequest;

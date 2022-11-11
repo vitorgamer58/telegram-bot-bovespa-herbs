@@ -1,5 +1,5 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
-const { TickerRequest } = require("../entities/ticker");
+const TickerRequest = require("../entities/ticker");
 const { MFinanceClient } = require("../../infra/repositories/mFinanceClient");
 
 const dependency = {
@@ -29,10 +29,11 @@ const calcularPrecoJusto = (injection) =>
         const { ticker } = ctx.req;
         const { mfinance } = ctx.di;
 
-        const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker)
+        const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker);
 
         if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);
-        if (dadosDePrecoRequest.ok.lastPrice == 0) return Err("Provavelmente o ticker está incorreto");
+        if (dadosDePrecoRequest.ok.lastPrice == 0)
+          return Err("Provavelmente o ticker está incorreto");
 
         ctx.data.dadosDePreco = dadosDePrecoRequest.ok;
         return Ok();
@@ -42,7 +43,8 @@ const calcularPrecoJusto = (injection) =>
         const { mfinance } = ctx.di;
 
         const indicadoresDaAcaoRequest = await mfinance.buscarIndicadoresAcao(ticker);
-        if(indicadoresDaAcaoRequest.isErr) return Err(`Erro ao buscar indicadores da ação ${ticker}`);
+        if (indicadoresDaAcaoRequest.isErr)
+          return Err(`Erro ao buscar indicadores da ação ${ticker}`);
 
         ctx.data.indicadoresDaAcao = indicadoresDaAcaoRequest.ok;
 

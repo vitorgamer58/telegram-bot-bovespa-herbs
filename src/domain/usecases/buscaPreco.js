@@ -1,6 +1,7 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
-const { TickerRequest } = require("../entities/ticker");
+const TickerRequest = require("../entities/ticker");
 const { MFinanceClient } = require("../../infra/repositories/mFinanceClient");
+const Stock = require("../entities/stock");
 
 const dependency = {
   mfinance: new MFinanceClient(),
@@ -16,8 +17,7 @@ const buscaPreco = (injection) =>
 
     "Verifica a requisição": step((ctx) => {
       const { ticker } = ctx.req;
-      const tickerRequest = new TickerRequest();
-      tickerRequest.ticker = ticker;
+      const tickerRequest = TickerRequest.fromJSON({ ticker });
 
       if (!tickerRequest.isValid()) return Err("Ticker inválido");
 
@@ -31,9 +31,10 @@ const buscaPreco = (injection) =>
       const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker);
       if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);
 
-      if (dadosDePrecoRequest.ok.lastPrice == 0) return Err("Provavelmente o ticker está incorreto");
+      const stock = Stock.fromJSON(dadosDePrecoRequest.ok);
+      if (!stock.isValid()) return Err("Provavelmente o ticker está incorreto");
 
-      return Ok((ctx.ret = dadosDePrecoRequest.ok));
+      return Ok((ctx.ret = stock));
     }),
   });
 
