@@ -28,6 +28,20 @@ class MFinanceClient {
       .then(({ data }) => Ok(data))
       .catch((error) => Err(error));
   }
+
+  buscarPrecoFii(ticker) {
+    return this._axios
+      .get(`/fiis/${ticker}`)
+      .then(({ data }) => Ok(data))
+      .catch((error) => Err(error));
+  }
+
+  buscarDividendosFii(ticker) {
+    return this._axios
+      .get(`/fiis/dividends/${ticker}`)
+      .then(({ data }) => Ok(data.dividends))
+      .catch((error) => Err(error));
+  }
 }
 
 module.exports = { MFinanceClient };

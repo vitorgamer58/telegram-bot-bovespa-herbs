@@ -13,7 +13,13 @@ const calculaPrecoJustoSpec = spec({
   "Deve calcular o preço justo": scenario({
     "Dado uma ação válida": given({
       request: { ticker: TickerForTest },
-      injection: { mfinance: new MFinanceMock(TickerForTest, 100, 90, 12) },
+      injection: {
+        mfinance: new MFinanceMock(TickerForTest, {
+          lastPrice: 100,
+          bookValuePerShare: 90,
+          earningsPerShare: 12,
+        }),
+      },
     }),
     "Deve rodar sem erros": check((ctx) => {
       assert.ok(ctx.response.isOk);
@@ -26,7 +32,13 @@ const calculaPrecoJustoSpec = spec({
   "Deve retornar erro se o ticker da ação for inválido": scenario({
     "Dado um ticker inválido": given({
       request: { ticker: "a1" },
-      injection: { mfinance: new MFinanceMock(TickerForTest, 100, 90, 12) },
+      injection: {
+        mfinance: new MFinanceMock(TickerForTest, {
+          lastPrice: 100,
+          bookValuePerShare: 90,
+          earningsPerShare: 12,
+        }),
+      },
     }),
     "Deve retornar erro": check((ctx) => {
       assert.ok(!ctx.response.isOk);

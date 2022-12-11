@@ -12,7 +12,11 @@ const buscaPrecoSpec = spec({
   "Deve responder com os dados da ação se ela existir": scenario({
     "Dado uma ação válida": given({
       request: { ticker: tickerForTest },
-      injection: { mfinance: new MFinanceMock(tickerForTest, 100) },
+      injection: {
+        mfinance: new MFinanceMock(tickerForTest, {
+          lastPrice: 100,
+        }),
+      },
     }),
     "Deve rodar sem erros": check((ctx) => {
       assert.ok(ctx.response.isOk);
@@ -22,7 +26,9 @@ const buscaPrecoSpec = spec({
   "Deve responder com erro se a ação for inválida": scenario({
     "Dado uma ação inválida": given({
       request: { ticker: "a1" },
-      injection: { mfinance: new MFinanceMock(tickerForTest, 100) },
+      injection: { mfinance: new MFinanceMock(tickerForTest, {
+        lastPrice: 100
+      }) },
     }),
     "Deve responder com erro": check((ctx) => {
       assert.ok(!ctx.response.isOk);
