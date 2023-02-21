@@ -13,57 +13,70 @@ bot.command("start", (ctx) => {
 });
 
 bot.command("price", async (ctx) => {
-  const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
+  try {
+    const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
 
-  const usecase = buscaPreco();
-  await usecase.authorize();
-  const ucResponse = await usecase.run({ ticker });
+    const usecase = buscaPreco();
+    await usecase.authorize();
+    const ucResponse = await usecase.run({ ticker });
 
-  if (ucResponse.err) {
-    return ctx.reply(ucResponse.err);
+    if (ucResponse.err) {
+      return ctx.reply(ucResponse.err);
+    }
+
+    const { lastPrice, change } = ucResponse.ok;
+
+    const message = `O preço da ação ${ticker} é R$ ${lastPrice} sendo a variação no dia de ${change}%`;
+
+    ctx.reply(message);
+  } catch (error) {
+    console.log(error)
+    return ctx.reply('Erro interno')
   }
-
-  const { lastPrice, change } = ucResponse.ok;
-
-  const message = `O preço da ação ${ticker} é R$ ${lastPrice} sendo a variação no dia de ${change}%`;
-
-  ctx.reply(message);
 });
 
 bot.command("graham", async (ctx) => {
-  const ticker = ctx.state.command.splitArgs[0]?.toUpperCase;
+  try {
+    const ticker = ctx.state.command.splitArgs[0]?.toUpperCase;
 
-  const usecase = calcularPrecoJusto();
-  await usecase.authorize();
-  const ucResponse = await usecase.run({ ticker });
+    const usecase = calcularPrecoJusto();
+    await usecase.authorize();
+    const ucResponse = await usecase.run({ ticker });
 
-  if (ucResponse.err) {
-    return ctx.reply(ucResponse.err);
+    if (ucResponse.err) {
+      return ctx.reply(ucResponse.err);
+    }
+
+    const { precoJusto, resultado, descontoOuAgio, precoDaAcao } = ucResponse.ok;
+
+    const message = `O preço justo da ação ${ticker} segundo a fórmula de graham é: R$ ${precoJusto} \nCom um ${resultado} de ${descontoOuAgio}% \nPreço: ${precoDaAcao}`;
+
+    ctx.reply(message);
+  } catch (error) {
+    console.log(error)
+    return ctx.reply('Erro interno')
   }
-
-  const { precoJusto, resultado, descontoOuAgio, precoDaAcao } = ucResponse.ok;
-
-  const message = `O preço justo da ação ${ticker} segundo a fórmula de graham é: R$ ${precoJusto} \nCom um ${resultado} de ${descontoOuAgio}% \nPreço: ${precoDaAcao}`;
-
-  ctx.reply(message);
 });
 
 bot.command("fii", async (ctx) => {
-  const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
+  try {
+    const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
 
-  const usecase = buscarFii();
-  await usecase.authorize();
-  const ucResponse = await usecase.run({ ticker });
+    const usecase = buscarFii();
+    await usecase.authorize();
+    const ucResponse = await usecase.run({ ticker });
 
-  if (ucResponse.err) {
-    return ctx.reply(ucResponse.err);
+    if (ucResponse.err) {
+      return ctx.reply(ucResponse.err);
+    }
+
+    const { preco, dividendos, dividendYield } = ucResponse.ok;
+
+    return ctx.reply(`O preço do FII ${ticker} é de R$ ${preco} \nCom uma distribuição (12m) de R$ ${dividendos} e yield de ${dividendYield}%`);
+  } catch (error) {
+    console.log(error)
+    return ctx.reply('Erro interno')
   }
-
-  console.log(ucResponse.ok);
-
-  const { preco, dividendos, dividendYield } = ucResponse.ok;
-
-  return ctx.reply(`O preço do FII ${ticker} é de R$ ${preco} \nCom uma distribuição (12m) de R$ ${dividendos} e yield de ${dividendYield}%`);
 });
 
 bot.launch();
