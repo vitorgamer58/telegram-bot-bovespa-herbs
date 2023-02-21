@@ -1,8 +1,8 @@
 const { spec, scenario, given, check } = require("@herbsjs/aloe");
 const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
-const buscaFii = require("../../src/domain/usecases/buscaFii");
-const { MFinanceMock } = require("../mocks/mFinanceMock");
+const buscaFii = require("./buscaFii");
+const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
 
 const tickerForTest = "ABCD11";
 
