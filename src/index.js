@@ -37,14 +37,14 @@ bot.command("price", async (ctx) => {
 
 bot.command("graham", async (ctx) => {
   try {
-    const ticker = ctx.state.command.splitArgs[0]?.toUpperCase;
+    const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
 
     const usecase = calcularPrecoJusto();
     await usecase.authorize();
     const ucResponse = await usecase.run({ ticker });
 
     if (ucResponse.err) {
-      return ctx.reply(ucResponse.err);
+      return ctx.reply("Erro interno");
     }
 
     const { precoJusto, resultado, descontoOuAgio, precoDaAcao } = ucResponse.ok;
