@@ -1,5 +1,5 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
-const TickerRequest = require("../entities/ticker");
+const TickerRequest = require("../entities/tickerRequest");
 const { MFinanceClient } = require("../../infra/repositories/mFinanceClient");
 const Stock = require("../entities/stock");
 

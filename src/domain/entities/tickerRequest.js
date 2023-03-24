@@ -6,7 +6,7 @@ const TickerRequest = entity("TickerRequest", {
       presence: true,
       length: { minimum: 5 },
       custom: {
-        isValidTicker: (value) => /([A-Z]{4}[1-9])/gm.test(value),
+        isValidTicker: (value) => /^[A-Z]{4}\d{1,2}$/gm.test(value),
       },
     },
   }),
