@@ -1,8 +1,7 @@
 const { Err, Ok } = require("@herbsjs/herbs");
+const axios = require("axios");
 
-const dependency = {
-  axios: require("axios"),
-};
+const dependency = { axios };
 
 class MFinanceClient {
   constructor(injection) {

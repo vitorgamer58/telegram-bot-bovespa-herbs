@@ -4,6 +4,7 @@ const commandParts = require("./infra/middlewares/telegraf-command-parts");
 const calcularPrecoJusto = require("./domain/usecases/calcularPrecoJusto");
 const buscaPreco = require("./domain/usecases/buscaPreco");
 const buscarFii = require("./domain/usecases/buscaFii");
+const bitcoinIndex = require("./domain/usecases/bitcoinIndex");
 
 const bot = new Telegraf(process.env.TOKEN);
 
@@ -20,7 +21,7 @@ bot.command("price", async (ctx) => {
     await usecase.authorize();
     const ucResponse = await usecase.run({ ticker });
 
-    if (ucResponse.err) {
+    if (ucResponse.isErr) {
       return ctx.reply(ucResponse.err);
     }
 
@@ -30,8 +31,8 @@ bot.command("price", async (ctx) => {
 
     ctx.reply(message);
   } catch (error) {
-    console.log(error)
-    return ctx.reply('Erro interno')
+    console.log(error);
+    return ctx.reply("Erro interno");
   }
 });
 
@@ -43,7 +44,7 @@ bot.command("graham", async (ctx) => {
     await usecase.authorize();
     const ucResponse = await usecase.run({ ticker });
 
-    if (ucResponse.err) {
+    if (ucResponse.isErr) {
       return ctx.reply("Erro interno");
     }
 
@@ -53,8 +54,8 @@ bot.command("graham", async (ctx) => {
 
     ctx.reply(message);
   } catch (error) {
-    console.log(error)
-    return ctx.reply('Erro interno')
+    console.log(error);
+    return ctx.reply("Erro interno");
   }
 });
 
@@ -66,17 +67,36 @@ bot.command("fii", async (ctx) => {
     await usecase.authorize();
     const ucResponse = await usecase.run({ ticker });
 
-    if (ucResponse.err) {
+    if (ucResponse.isErr) {
       return ctx.reply(ucResponse.err);
     }
 
     const { preco, dividendos, dividendYield } = ucResponse.ok;
 
-    return ctx.reply(`O preço do FII ${ticker} é de R$ ${preco} \nCom uma distribuição (12m) de R$ ${dividendos} e yield de ${dividendYield}%`);
+    return ctx.reply(
+      `O preço do FII ${ticker} é de R$ ${preco} \nCom uma distribuição (12m) de R$ ${dividendos} e yield de ${dividendYield}%`
+    );
   } catch (error) {
-    console.log(error)
-    return ctx.reply('Erro interno')
+    console.log(error);
+    return ctx.reply("Erro interno");
   }
+});
+
+bot.command("bitcoin", async (ctx) => {
+  try {
+    const usecase = bitcoinIndex();
+    await usecase.authorize();
+
+    const ucResponse = await usecase.run();
+
+    if (ucResponse.isErr) {
+      return ctx.reply(ucResponse.err);
+    }
+
+    const { preco, variacao } = ucResponse.ok;
+
+    return ctx.reply(`O preço do Bitcoin é de R$ ${preco}, com variação de ${variacao}%`);
+  } catch (error) {}
 });
 
 bot.launch();
