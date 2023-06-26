@@ -1,5 +1,7 @@
 const { Ok } = require("@herbsjs/herbs");
 const assert = require("assert");
+const jsonAcoes = require("./acoes.json");
+const Stock = require("../../src/domain/entities/stock");
 
 class MFinanceMock {
   constructor(ticker, dadosdaacao = {}, dadosdofii = {}) {
@@ -15,12 +17,20 @@ class MFinanceMock {
     };
   }
 
+  buscarTodasAcoes() {
+    const acoes = jsonAcoes.map((acao) => Stock.fromJSON(acao));
+
+    return Ok(acoes.filter((acao) => acao.isValid()));
+  }
+
   buscarPrecoAcao(ticker) {
     assert.deepEqual(ticker, this.ticker);
 
-    return Ok({
+    const stock = Stock.fromJSON({
       lastprice: this.acao.lastPrice,
     });
+
+    return Ok(stock);
   }
 
   buscarIndicadoresAcao(ticker) {

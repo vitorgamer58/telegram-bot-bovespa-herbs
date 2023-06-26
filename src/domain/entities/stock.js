@@ -8,6 +8,8 @@ const Stock = entity("Stock", {
   }),
   name: field(String),
   symbol: field(String),
+  change: field(Number),
+  volume: field(Number),
 });
 
 module.exports = Stock;

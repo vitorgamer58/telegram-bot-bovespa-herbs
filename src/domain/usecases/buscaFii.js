@@ -1,6 +1,6 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
 const TickerRequest = require("../entities/tickerRequest");
-const { MFinanceClient } = require("../../infra/repositories/mFinanceClient");
+const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 
 const dependency = {
   mfinance: new MFinanceClient(),
@@ -33,6 +33,7 @@ const buscaFii = (injection) =>
         const { mfinance } = ctx.di;
 
         const dadosDePrecoRequest = await mfinance.buscarPrecoFii(ticker);
+
         if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados do fii ${ticker}`);
         if (dadosDePrecoRequest.ok.lastPrice == 0)
           return Err("Provavelmente o ticker está incorreto");

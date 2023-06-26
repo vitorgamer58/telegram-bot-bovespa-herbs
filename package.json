@@ -16,8 +16,8 @@
   "author": "vitorgamer58",
   "license": "MIT",
   "devDependencies": {
-    "@herbsjs/aloe": "^1.0.3",
-    "@herbsjs/herbs-cli": "^2.18.2",
+    "@herbsjs/aloe": "^2.3.0-beta.1",
+    "@herbsjs/herbs-cli": "^2.19.0-beta.5",
     "nodemon": "^2.0.20",
     "prettier": "2.7.1"
   },
@@ -25,8 +25,11 @@
     "@herbsjs/gotu": "^1.2.0",
     "@herbsjs/herbarium": "^1.4.0",
     "@herbsjs/herbs": "^2.0.0",
+    "@herbsjs/herbs2mongo": "^4.0.0",
     "axios": "^1.1.2",
+    "cron": "^2.3.1",
     "dotenv": "^16.0.3",
+    "handlebars": "^4.7.7",
     "telegraf": "^4.10.0"
   }
 }

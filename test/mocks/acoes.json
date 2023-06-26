@@ -1,0 +1,86 @@
+[
+  {
+    "change": 0.5,
+    "lastPrice": 115000,
+    "name": "IBOV",
+    "symbol": "IBOV",
+    "volume": 15765000
+  },
+  {
+    "change": 0.2,
+    "lastPrice": 15.49,
+    "name": "Ambev SA",
+    "symbol": "ABEV3",
+    "volume": 15765000
+  },
+  {
+    "change": 0,
+    "lastPrice": 10.23,
+    "name": "Ação Fictícia",
+    "symbol": "ACAO1",
+    "volume": 5000000
+  },
+  {
+    "change": -0.5,
+    "lastPrice": 20.15,
+    "name": "Banco do Brasil SA",
+    "symbol": "BBAS3",
+    "volume": 8200000
+  },
+  {
+    "change": 0.8,
+    "lastPrice": 35.75,
+    "name": "Bradesco SA",
+    "symbol": "BBDC4",
+    "volume": 4400000
+  },
+  {
+    "change": -1.2,
+    "lastPrice": 42.15,
+    "name": "Petrobras SA",
+    "symbol": "PETR4",
+    "volume": 12800000
+  },
+  {
+    "change": 0.3,
+    "lastPrice": 52.5,
+    "name": "Itaú Unibanco Holding SA",
+    "symbol": "ITUB4",
+    "volume": 3760000
+  },
+  {
+    "change": 0.1,
+    "lastPrice": 18.8,
+    "name": "Vale SA",
+    "symbol": "VALE3",
+    "volume": 6200000
+  },
+  {
+    "change": -0.7,
+    "lastPrice": 7.75,
+    "name": "Gerdau SA",
+    "symbol": "GGBR4",
+    "volume": 4700000
+  },
+  {
+    "change": 0.5,
+    "lastPrice": 14.25,
+    "name": "Magazine Luiza SA",
+    "symbol": "MGLU3",
+    "volume": 2120000
+  },
+  {
+    "change": -0.4,
+    "lastPrice": 33.9,
+    "name": "Natura &Co Holding SA",
+    "symbol": "NTCO3",
+    "volume": 1440000
+  },
+  {
+    "change": 0.9,
+    "lastPrice": 9.8,
+    "name": "Cielo SA",
+    "symbol": "CIEL3",
+    "volume": 3960000
+  }
+]

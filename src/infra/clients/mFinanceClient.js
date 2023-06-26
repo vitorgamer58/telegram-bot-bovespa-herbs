@@ -1,4 +1,5 @@
 const { Err, Ok } = require("@herbsjs/herbs");
+const Stock = require("../../domain/entities/stock");
 const axios = require("axios");
 
 const dependency = { axios };
@@ -14,10 +15,21 @@ class MFinanceClient {
     });
   }
 
+  buscarTodasAcoes() {
+    return this._axios
+      .get(`stocks`)
+      .then(({ data }) => {
+        const acoes = data.stocks.map((acao) => Stock.fromJSON(acao));
+
+        return Ok(acoes.filter((acao) => acao.isValid()));
+      })
+      .catch((error) => Err(error));
+  }
+
   buscarPrecoAcao(ticker) {
     return this._axios
       .get(`stocks/${ticker}`)
-      .then(({ data }) => Ok(data))
+      .then(({ data }) => Ok(Stock.fromJSON(data)))
       .catch((error) => Err(error));
   }
 

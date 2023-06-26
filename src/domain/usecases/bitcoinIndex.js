@@ -1,5 +1,5 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
-const { CoinSambaClient } = require("../../infra/repositories/coinSambaClient");
+const { CoinSambaClient } = require("../../infra/clients/coinSambaClient");
 
 const dependency = {
   coinSambaClient: new CoinSambaClient(),
@@ -9,9 +9,7 @@ const bitcoinIndex = (injection) =>
   usecase("BitcoinIndex", {
     authorize: () => Ok(),
 
-    setup: (ctx) => {
-      ctx.di = Object.assign({}, dependency, injection);
-    },
+    setup: (ctx) => (ctx.di = Object.assign({}, dependency, injection)),
 
     "Busca o preço do Bitcoin e retorna": step(async (ctx) => {
       const { coinSambaClient } = ctx.di;
