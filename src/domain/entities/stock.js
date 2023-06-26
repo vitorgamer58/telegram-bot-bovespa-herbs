@@ -1,4 +1,5 @@
 const { entity, field } = require("@herbsjs/herbs");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const Stock = entity("Stock", {
   lastPrice: field(Number, {
@@ -12,4 +13,4 @@ const Stock = entity("Stock", {
   volume: field(Number),
 });
 
-module.exports = Stock;
+module.exports = herbarium.entities.add(Stock, "Stock").entity;

@@ -1,14 +1,21 @@
-const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
+const { usecase, step, Ok, Err, request } = require("@herbsjs/herbs");
 const TickerRequest = require("../entities/tickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
   mfinance: new MFinanceClient(),
 };
 
 const buscaFii = (injection) =>
-  usecase("BuscaFII", {
-    request: { ticker: String },
+  usecase("Busca preço e dividendos do FII", {
+    request: request.from(TickerRequest),
+
+    response: {
+      preco: Number,
+      dividendos: String,
+      dividendYield: String,
+    },
 
     authorize: () => Ok(),
 
@@ -18,9 +25,7 @@ const buscaFii = (injection) =>
     },
 
     "Verifica a requisição": step((ctx) => {
-      const { ticker } = ctx.req;
-      const tickerRequest = new TickerRequest();
-      tickerRequest.ticker = ticker;
+      const tickerRequest = ctx.req;
 
       if (!tickerRequest.isValid()) return Err("Ticker inválido");
 
@@ -87,4 +92,4 @@ const buscaFii = (injection) =>
     }),
   });
 
-module.exports = buscaFii;
+module.exports = herbarium.usecases.add(buscaFii, "BuscaFii").metadata({ group: "Busca" }).usecase;

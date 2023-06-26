@@ -26,9 +26,11 @@ const buscaPrecoSpec = spec({
   "Deve responder com erro se a ação for inválida": scenario({
     "Dado uma ação inválida": given({
       request: { ticker: "a1" },
-      injection: { mfinance: new MFinanceMock(tickerForTest, {
-        lastPrice: 100
-      }) },
+      injection: {
+        mfinance: new MFinanceMock(tickerForTest, {
+          lastPrice: 100,
+        }),
+      },
     }),
     "Deve responder com erro": check((ctx) => {
       assert.ok(!ctx.response.isOk);
@@ -37,4 +39,6 @@ const buscaPrecoSpec = spec({
   }),
 });
 
-module.exports = herbarium.specs.add(buscaPrecoSpec, "buscaPrecoSpec").spec;
+module.exports = herbarium.specs
+  .add(buscaPrecoSpec, "buscaPrecoSpec")
+  .metadata({ usecase: "BuscaPreco" }).spec;

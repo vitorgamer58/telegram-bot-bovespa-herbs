@@ -18,6 +18,7 @@ const obterClientes = require("../../domain/usecases/obterClientes");
 const Client = require("../../domain/entities/client");
 const verificaCadastro = require("../../domain/usecases/verificaCadastro");
 const alteraCadastro = require("../../domain/usecases/alteraCadastro");
+const TickerRequest = require("../../domain/entities/tickerRequest");
 
 const runBot = () => {
   const bot = new Telegraf(process.env.TOKEN);
@@ -79,11 +80,17 @@ const runBot = () => {
 
   bot.command("fii", async (ctx) => {
     try {
+      await ctx.telegram.sendChatAction(ctx.update.message.chat.id, "typing");
+
       const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
+
+      const tickerRequest = TickerRequest.fromJSON({
+        ticker,
+      });
 
       const usecase = buscarFii();
       await usecase.authorize();
-      const ucResponse = await usecase.run({ ticker });
+      const ucResponse = await usecase.run(tickerRequest);
 
       if (ucResponse.isErr) {
         await ctx.reply(ucResponse.err);
@@ -121,7 +128,7 @@ const runBot = () => {
 
   bot.command("fechamento", async (ctx) => {
     try {
-      await ctx.telegram.sendChatAction(ctx.update.message.from.id, "typing");
+      await ctx.telegram.sendChatAction(ctx.update.message.chat.id, "typing");
 
       const usecase = fechamento();
       await usecase.authorize();
@@ -144,7 +151,7 @@ const runBot = () => {
 
   bot.command("cadastro", async (ctx) => {
     try {
-      await ctx.telegram.sendChatAction(ctx.update.message.from.id, "typing");
+      await ctx.telegram.sendChatAction(ctx.update.message.chat.id, "typing");
       const nome = ctx.update.message.from.first_name;
 
       const params = {

@@ -1,3 +1,4 @@
+const { herbarium } = require("@herbsjs/herbarium");
 const { entity, field, id, checker } = require("@herbsjs/herbs");
 
 const Group = entity("Group", {
@@ -33,5 +34,6 @@ const fromTelegram = ({ username, type, chatId, groupInfo }) => {
   return client;
 };
 
-module.exports = Client;
+herbarium.entities.add(Group, "Group").entity;
+module.exports = herbarium.entities.add(Client, "Client").entity;
 module.exports.fromTelegram = fromTelegram;

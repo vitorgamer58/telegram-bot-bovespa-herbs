@@ -1,5 +1,7 @@
 const { usecase, step, Ok, Err, checker } = require("@herbsjs/herbs");
 const ClientRepository = require("../../infra/database/clientRepository");
+const { herbarium } = require("@herbsjs/herbarium");
+const Client = require("../entities/client");
 
 const dependency = {
   clientRepository: new ClientRepository(),
@@ -8,6 +10,8 @@ const dependency = {
 const obterClientes = (injection) =>
   usecase("Obter clientes", {
     request: {},
+
+    response: [Client],
 
     authorize: () => Ok(),
 
@@ -26,4 +30,6 @@ const obterClientes = (injection) =>
     }),
   });
 
-module.exports = obterClientes;
+module.exports = herbarium.usecases
+  .add(obterClientes, "ObterClientes")
+  .metadata({ group: "Cadastro", entity: Client }).usecase;

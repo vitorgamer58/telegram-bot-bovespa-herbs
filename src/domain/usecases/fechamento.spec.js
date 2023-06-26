@@ -77,4 +77,6 @@ const fechamentoSpec = spec({
   }),
 });
 
-module.exports = herbarium.specs.add(fechamentoSpec, "fechamentoSpec").spec;
+module.exports = herbarium.specs
+  .add(fechamentoSpec, "fechamentoSpec")
+  .metadata({ usecase: "Fechamento" }).spec;

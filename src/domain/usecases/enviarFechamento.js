@@ -3,6 +3,7 @@ const obterClientes = require("./obterClientes");
 const fechamento = require("./fechamento");
 const HandleBars = require("handlebars");
 const { fechamentoTemplate } = require("../templates");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
   obterClientes,
@@ -76,4 +77,6 @@ const enviarFechamento = (injection) =>
     }),
   });
 
-module.exports = enviarFechamento;
+module.exports = herbarium.usecases
+  .add(enviarFechamento, "EnviaFechamento")
+  .metadata({ group: "Fechamento" }).usecase;

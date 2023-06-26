@@ -2,6 +2,7 @@ const { usecase, step, Ok, Err, checker, request, ifElse } = require("@herbsjs/h
 const ClientRepository = require("../../infra/database/clientRepository");
 const Client = require("../entities/client");
 const verificaCadastro = require("./verificaCadastro");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
   clientRepository: new ClientRepository(),
@@ -11,6 +12,10 @@ const dependency = {
 const alteraCadastro = (injection) =>
   usecase("Altera o status do cadastro do cliente", {
     request: request.from(Client, { ignoreIds: true }),
+
+    response: {
+      estavaCadastrado: Boolean,
+    },
 
     authorize: () => Ok(),
 
@@ -74,4 +79,6 @@ const alteraCadastro = (injection) =>
     }),
   });
 
-module.exports = alteraCadastro;
+module.exports = herbarium.usecases
+  .add(alteraCadastro, "AlteraCadastro")
+  .metadata({ group: "Cadastro", entity: Client }).usecase;

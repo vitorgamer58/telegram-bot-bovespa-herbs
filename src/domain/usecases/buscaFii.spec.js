@@ -43,4 +43,6 @@ const buscaFiiSpec = spec({
   }),
 });
 
-module.exports = herbarium.specs.add(buscaFiiSpec, "buscaFiiSpec").spec;
+module.exports = herbarium.specs
+  .add(buscaFiiSpec, "buscaFiiSpec")
+  .metadata({ usecase: "BuscaFii" }).spec;

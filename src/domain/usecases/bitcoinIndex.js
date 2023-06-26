@@ -1,12 +1,20 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
 const { CoinSambaClient } = require("../../infra/clients/coinSambaClient");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
   coinSambaClient: new CoinSambaClient(),
 };
 
 const bitcoinIndex = (injection) =>
-  usecase("BitcoinIndex", {
+  usecase("Busca o índice do Bitcoin", {
+    request: {},
+
+    response: {
+      preco: Number,
+      variacao: Number,
+    },
+
     authorize: () => Ok(),
 
     setup: (ctx) => (ctx.di = Object.assign({}, dependency, injection)),
@@ -27,4 +35,6 @@ const bitcoinIndex = (injection) =>
     }),
   });
 
-module.exports = bitcoinIndex;
+module.exports = herbarium.usecases
+  .add(bitcoinIndex, "BitcoinIndex")
+  .metadata({ group: "Busca" }).usecase;

@@ -2,14 +2,17 @@ const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
 const TickerRequest = require("../entities/tickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const Stock = require("../entities/stock");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
   mfinance: new MFinanceClient(),
 };
 
 const buscaPreco = (injection) =>
-  usecase("BuscaPreco", {
+  usecase("Buscar preco da ação", {
     request: { ticker: String },
+
+    response: Stock,
 
     authorize: () => Ok(),
 
@@ -41,4 +44,6 @@ const buscaPreco = (injection) =>
     }),
   });
 
-module.exports = buscaPreco;
+module.exports = herbarium.usecases
+  .add(buscaPreco, "BuscaPreco")
+  .metadata({ group: "Busca" }).usecase;

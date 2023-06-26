@@ -18,6 +18,8 @@
   "devDependencies": {
     "@herbsjs/aloe": "^2.3.0-beta.1",
     "@herbsjs/herbs-cli": "^2.19.0-beta.5",
+    "@herbsjs/herbsshelf": "^5.0.1",
+    "express": "^4.18.2",
     "nodemon": "^2.0.20",
     "prettier": "2.7.1"
   },

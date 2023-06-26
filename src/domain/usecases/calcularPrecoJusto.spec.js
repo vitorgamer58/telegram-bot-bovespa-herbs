@@ -48,4 +48,6 @@ const calculaPrecoJustoSpec = spec({
   }),
 });
 
-module.exports = herbarium.specs.add(calculaPrecoJustoSpec, "calculaPrecoJustoSpec").spec;
+module.exports = herbarium.specs
+  .add(calculaPrecoJustoSpec, "calculaPrecoJustoSpec")
+  .metadata({ usecase: "CalcularPrecoJusto" }).spec;

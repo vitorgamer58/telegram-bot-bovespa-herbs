@@ -1,13 +1,14 @@
 const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
 const TickerRequest = require("../entities/tickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
   mfinance: new MFinanceClient(),
 };
 
 const calcularPrecoJusto = (injection) =>
-  usecase("CalcularPrecoJusto", {
+  usecase("Calcular preco justo pela fórmula de Graham", {
     request: { ticker: String },
 
     authorize: () => Ok(),
@@ -87,4 +88,6 @@ const calcularPrecoJusto = (injection) =>
     }),
   });
 
-module.exports = calcularPrecoJusto;
+module.exports = herbarium.usecases
+  .add(calcularPrecoJusto, "CalcularPrecoJusto")
+  .metadata({ group: "Busca" }).usecase;

@@ -23,4 +23,6 @@ const bitcoinIndexSpec = spec({
   }),
 });
 
-module.exports = herbarium.specs.add(bitcoinIndexSpec, "bitcoinIndexSpec").spec;
+module.exports = herbarium.specs
+  .add(bitcoinIndexSpec, "bitcoinIndexSpec")
+  .metadata({ usecase: "BitcoinIndex" }).spec;

@@ -1,6 +1,8 @@
 const { usecase, step, Ok, Err, checker } = require("@herbsjs/herbs");
 const IndiceRepository = require("../../infra/database/indiceRepository");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
+const { herbarium } = require("@herbsjs/herbarium");
+const Stock = require("../entities/stock");
 
 const dependency = {
   mfinance: new MFinanceClient(),
@@ -10,6 +12,14 @@ const dependency = {
 const fechamento = (injection) =>
   usecase("Buscar fechamento do dia", {
     request: {},
+
+    response: {
+      maioresAltas: [Stock],
+      maioresBaixas: [Stock],
+      maisNegociadas: [Stock],
+      deltaIbov: Number,
+      dataAtual: String,
+    },
 
     authorize: () => Ok(),
 
@@ -116,4 +126,6 @@ const fechamento = (injection) =>
     }),
   });
 
-module.exports = fechamento;
+module.exports = herbarium.usecases
+  .add(fechamento, "Fechamento")
+  .metadata({ group: "Fechamento", entity: Stock }).usecase;
