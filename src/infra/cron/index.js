@@ -34,7 +34,7 @@ const cronJobs = (bot) => {
     "America/Sao_Paulo"
   );
 
-  console.log("CronJob iniciado com sucesso");
+  console.log("⌚ CronJob iniciado com sucesso");
 };
 
 const enviaMensagemErro = async (bot, mensagem) => {

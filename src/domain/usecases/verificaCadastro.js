@@ -13,7 +13,8 @@ const verificaCadastro = (injection) =>
 
     response: {
       estaCadastrado: Boolean,
-      cliente: Client
+      cliente: Client,
+      cadastroAtualizado: Boolean,
     },
 
     authorize: () => Ok(),
@@ -80,6 +81,7 @@ const verificaCadastro = (injection) =>
         await clientRepository.update(updatedClient);
 
         ctx.ret.cliente = updatedClient;
+        ctx.ret.cadastroAtualizado = true;
 
         return Ok();
       }),

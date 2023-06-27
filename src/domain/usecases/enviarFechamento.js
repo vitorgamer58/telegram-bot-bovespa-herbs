@@ -50,7 +50,7 @@ const enviarFechamento = (injection) =>
 
     "Constrói mensagem de fechamento": step((ctx) => {
       const { fechamento } = ctx.data;
-      
+
       const template = HandleBars.compile(fechamentoTemplate);
       const mensagem = template(fechamento);
 
@@ -75,6 +75,30 @@ const enviarFechamento = (injection) =>
 
       return Ok();
     }),
+
+    "Envia a mensagem de atualização do cadastro para todos os clientes com cadastro desatualizado":
+      step(async (ctx) => {
+        const { clientes } = ctx.data;
+        const { bot } = ctx.di;
+
+        const clientesNaoCadastrados = clientes.filter((cliente) => cliente.type === "undefined");
+
+        const mensagem = `O bot foi atualizado, atualize o cadastro deste chat, basta usar o comando /cadastro`
+
+        await Promise.all(
+          clientesNaoCadastrados.map(async (cliente) => {
+            try {
+              await bot.telegram.sendMessage(cliente.chat_id, mensagem);
+            } catch (error) {
+              console.log(
+                `Erro ao enviar mensagem para o cliente ${cliente.id}: ${error.mensagem}`
+              );
+            }
+          })
+        );
+
+        return Ok();
+      }),
   });
 
 module.exports = herbarium.usecases

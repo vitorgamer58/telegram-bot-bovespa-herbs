@@ -181,7 +181,13 @@ const runBot = () => {
         return;
       }
 
-      const { estaCadastrado } = ucResponse.ok;
+      const { estaCadastrado, cadastroAtualizado } = ucResponse.ok;
+
+      if (cadastroAtualizado) {
+        await ctx.reply(`Cadastro atualizado com sucesso!`);
+
+        return;
+      }
 
       if (estaCadastrado) {
         await ctx.reply(
@@ -258,7 +264,7 @@ const runBot = () => {
   });
 
   bot.launch();
-  console.log("Bot funcionando");
+  console.log("🤖 Bot funcionando \n");
 
   return bot;
 };
