@@ -19,9 +19,10 @@ const Client = require("../../domain/entities/client");
 const verificaCadastro = require("../../domain/usecases/verificaCadastro");
 const alteraCadastro = require("../../domain/usecases/alteraCadastro");
 const TickerRequest = require("../../domain/entities/tickerRequest");
+const config = require("../config");
 
 const runBot = () => {
-  const bot = new Telegraf(process.env.TOKEN);
+  const bot = new Telegraf(config.token);
 
   bot.use(commandParts());
 

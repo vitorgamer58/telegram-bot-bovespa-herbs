@@ -4,8 +4,7 @@ const { CronJob } = require("cron");
 const cronValidator = require("cron-validator");
 const cronstrue = require("cronstrue/i18n");
 const enviarFechamento = require("../../domain/usecases/enviarFechamento");
-
-const CRON_SCHEDULE = "30 18 * * 1-5";
+const { cron: cronConfig } = require("../config");
 
 /**
  * @param {Telegraf<Context<Update>>} bot - A instância do Telegraf usada para interagir com o bot do Telegram.
@@ -16,12 +15,14 @@ const CRON_SCHEDULE = "30 18 * * 1-5";
 const cronJobs = (bot) => {
   if (!bot) throw new Error("Instância do bot não passada");
 
-  const isCronValid = cronValidator.isValidCron(CRON_SCHEDULE);
+  const cronSchedule = cronConfig.cronSchedule;
 
-  if (!isCronValid) throw new Error(`Expressão cron ${CRON_SCHEDULE} inválida`);
+  const isCronValid = cronValidator.isValidCron(cronSchedule);
+
+  if (!isCronValid) throw new Error(`Expressão cron ${cronSchedule} inválida`);
 
   new CronJob(
-    CRON_SCHEDULE,
+    cronSchedule,
     async () => {
       try {
         const enviarFechamentoInstance = enviarFechamento({ bot });
@@ -41,7 +42,7 @@ const cronJobs = (bot) => {
     "America/Sao_Paulo"
   );
 
-  const cronPortugues = cronstrue.toString(CRON_SCHEDULE, { locale: "pt_BR" });
+  const cronPortugues = cronstrue.toString(cronSchedule, { locale: "pt_BR" });
   console.log(`⌚ CronJob configurado para rodar ${cronPortugues}`);
 };
 
