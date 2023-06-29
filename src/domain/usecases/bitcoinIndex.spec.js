@@ -1,4 +1,5 @@
 const { spec, scenario, given, check } = require("@herbsjs/aloe");
+const { Err } = require("@herbsjs/herbs");
 const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
 const bitcoinIndex = require("./bitcoinIndex");
@@ -19,6 +20,21 @@ const bitcoinIndexSpec = spec({
     "Deve retornar o preço do Bitcoin": check((ctx) => {
       assert.deepEqual(ctx.response.ok.preco, "100000.00");
       assert.deepEqual(ctx.response.ok.variacao, "1.00");
+    }),
+  }),
+
+  "Não deve retornar se houver um erro no CoinSamba": scenario({
+    "Dado um UC válido": given({
+      injection: {
+        coinSambaClient: new (class {
+          buscarIndexBitcoin() {
+            return Err("Erro");
+          }
+        })(),
+      },
+    }),
+    "Deve retornar erro": check((ctx) => {
+      assert.ok(ctx.response.isErr);
     }),
   }),
 });

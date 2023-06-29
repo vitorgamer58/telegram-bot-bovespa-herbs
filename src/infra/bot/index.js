@@ -14,7 +14,6 @@ const {
   priceTemplate,
   grahamTemplate,
 } = require("../../domain/templates");
-const obterClientes = require("../../domain/usecases/obterClientes");
 const Client = require("../../domain/entities/client");
 const verificaCadastro = require("../../domain/usecases/verificaCadastro");
 const alteraCadastro = require("../../domain/usecases/alteraCadastro");
@@ -35,11 +34,17 @@ const runBot = () => {
 
   bot.command("price", async (ctx) => {
     try {
+      await ctx.telegram.sendChatAction(ctx.update.message.chat.id, "typing");
+
       const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
+
+      const tickerRequest = TickerRequest.fromJSON({
+        ticker,
+      });
 
       const usecase = buscaPreco();
       await usecase.authorize();
-      const ucResponse = await usecase.run({ ticker });
+      const ucResponse = await usecase.run(tickerRequest);
 
       if (ucResponse.isErr) {
         return ctx.reply(ucResponse.err);
@@ -58,14 +63,20 @@ const runBot = () => {
 
   bot.command("graham", async (ctx) => {
     try {
+      await ctx.telegram.sendChatAction(ctx.update.message.chat.id, "typing");
+
       const ticker = ctx.state.command.splitArgs[0]?.toUpperCase();
+
+      const tickerRequest = TickerRequest.fromJSON({
+        ticker,
+      });
 
       const usecase = calcularPrecoJusto();
       await usecase.authorize();
-      const ucResponse = await usecase.run({ ticker });
+      const ucResponse = await usecase.run(tickerRequest);
 
       if (ucResponse.isErr) {
-        return ctx.reply("Erro interno");
+        return ctx.reply(ucResponse.err);
       }
 
       const { precoJusto, resultado, descontoOuAgio, precoDaAcao } = ucResponse.ok;
@@ -110,6 +121,8 @@ const runBot = () => {
 
   bot.command("bitcoin", async (ctx) => {
     try {
+      await ctx.telegram.sendChatAction(ctx.update.message.chat.id, "typing");
+
       const usecase = bitcoinIndex();
       await usecase.authorize();
 

@@ -1,4 +1,4 @@
-const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
+const { usecase, step, Ok, Err, request } = require("@herbsjs/herbs");
 const TickerRequest = require("../entities/tickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const Stock = require("../entities/stock");
@@ -10,7 +10,7 @@ const dependency = {
 
 const buscaPreco = (injection) =>
   usecase("Buscar preco da ação", {
-    request: { ticker: String },
+    request: request.from(TickerRequest),
 
     response: Stock,
 
@@ -22,8 +22,7 @@ const buscaPreco = (injection) =>
     },
 
     "Verifica a requisição": step((ctx) => {
-      const { ticker } = ctx.req;
-      const tickerRequest = TickerRequest.fromJSON({ ticker });
+      const tickerRequest = ctx.req;
 
       if (!tickerRequest.isValid()) return Err("Ticker inválido");
 

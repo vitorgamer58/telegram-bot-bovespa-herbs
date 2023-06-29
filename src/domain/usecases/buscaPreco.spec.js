@@ -3,6 +3,7 @@ const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
 const buscaPreco = require("./buscaPreco");
 const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
+const TickerRequest = require("../entities/tickerRequest");
 
 const tickerForTest = "ABCD3";
 
@@ -11,7 +12,7 @@ const buscaPrecoSpec = spec({
 
   "Deve responder com os dados da ação se ela existir": scenario({
     "Dado uma ação válida": given({
-      request: { ticker: tickerForTest },
+      request: TickerRequest.fromJSON({ ticker: tickerForTest }),
       injection: {
         mfinance: new MFinanceMock(tickerForTest, {
           lastPrice: 100,
@@ -25,7 +26,7 @@ const buscaPrecoSpec = spec({
 
   "Deve responder com erro se a ação for inválida": scenario({
     "Dado uma ação inválida": given({
-      request: { ticker: "a1" },
+      request: TickerRequest.fromJSON({ ticker: 'A1' }),
       injection: {
         mfinance: new MFinanceMock(tickerForTest, {
           lastPrice: 100,

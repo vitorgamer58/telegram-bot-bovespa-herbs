@@ -1,7 +1,8 @@
-const { usecase, step, Ok, Err } = require("@herbsjs/herbs");
+const { usecase, step, Ok, Err, request } = require("@herbsjs/herbs");
 const TickerRequest = require("../entities/tickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const { herbarium } = require("@herbsjs/herbarium");
+const tickerRequest = require("../entities/tickerRequest");
 
 const dependency = {
   mfinance: new MFinanceClient(),
@@ -9,16 +10,21 @@ const dependency = {
 
 const calcularPrecoJusto = (injection) =>
   usecase("Calcular preco justo pela fórmula de Graham", {
-    request: { ticker: String },
+    request: request.from(TickerRequest),
+
+    response: {
+      precoDaAcao: Number,
+      precoJusto: String,
+      descontoOuAgio: Number,
+      resultado: String
+    },
 
     authorize: () => Ok(),
 
     setup: (ctx) => ((ctx.di = Object.assign({}, dependency, injection)), (ctx.data = {})),
 
     "Verifica a requisição": step((ctx) => {
-      const { ticker } = ctx.req;
-      const tickerRequest = new TickerRequest();
-      tickerRequest.ticker = ticker;
+      const tickerRequest = ctx.req;
 
       if (!tickerRequest.isValid()) return Err("Ticker inválido");
 
@@ -33,8 +39,7 @@ const calcularPrecoJusto = (injection) =>
         const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker);
 
         if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);
-        if (dadosDePrecoRequest.ok.lastPrice == 0)
-          return Err("Provavelmente o ticker está incorreto");
+        if (!dadosDePrecoRequest.ok.isValid()) return Err("Provavelmente o ticker está incorreto");
 
         ctx.data.dadosDePreco = dadosDePrecoRequest.ok;
         return Ok();

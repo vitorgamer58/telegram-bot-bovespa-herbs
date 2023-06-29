@@ -1,4 +1,5 @@
 const { entity, field } = require("@herbsjs/herbs");
+const { herbarium } = require("@herbsjs/herbarium");
 
 const TickerRequest = entity("TickerRequest", {
   ticker: field(String, {
@@ -6,10 +7,10 @@ const TickerRequest = entity("TickerRequest", {
       presence: true,
       length: { minimum: 5 },
       custom: {
-        isValidTicker: (value) => /^[A-Z]{4}\d{1,2}$/gm.test(value),
+        isInvalidTicker: (value) => /^[A-Z]{4}\d{1,2}$/gm.test(value),
       },
     },
   }),
 });
 
-module.exports = TickerRequest;
+module.exports = herbarium.entities.add(TickerRequest, "TickerRequest").entity;

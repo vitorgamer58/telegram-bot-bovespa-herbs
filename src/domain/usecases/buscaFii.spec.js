@@ -3,6 +3,7 @@ const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
 const buscaFii = require("./buscaFii");
 const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
+const TickerRequest = require("../entities/tickerRequest");
 
 const tickerForTest = "ABCD11";
 
@@ -11,7 +12,7 @@ const buscaFiiSpec = spec({
 
   "Deve responder com os dados do FII se ele existir": scenario({
     "Dado um FII válido": given({
-      request: { ticker: tickerForTest },
+      request: TickerRequest.fromJSON({ ticker: tickerForTest }),
       injection: {
         mfinance: new MFinanceMock(
           tickerForTest,
@@ -33,7 +34,7 @@ const buscaFiiSpec = spec({
 
   "Deve responder com erro se o FII for inválido": scenario({
     "Dado um FII inválido": given({
-      request: { ticker: "a1" },
+      request: TickerRequest.fromJSON({ ticker: "A1" }),
       injection: { mfinance: new MFinanceMock() },
     }),
     "Deve responder com erro": check((ctx) => {
