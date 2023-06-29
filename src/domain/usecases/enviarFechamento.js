@@ -68,7 +68,7 @@ const enviarFechamento = (injection) =>
           try {
             await bot.telegram.sendMessage(cliente.chat_id, mensagem);
           } catch (error) {
-            console.log(`Erro ao enviar mensagem para o cliente ${cliente.id}: ${error.mensagem}`);
+            console.log(`Erro ao enviar mensagem para o cliente ${cliente.chat_id}: ${error.message}`);
           }
         })
       );
