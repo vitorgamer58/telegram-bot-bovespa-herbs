@@ -30,10 +30,10 @@ Confira os dados de fechamento do pregão!🦈
 const startTemplate = `Bem vindo {{firstName}}, eu sou um robô, alguns dos meus comandos são:
 /price + Código da ação (Responde com o valor da ação)
 /bitcoin Responde com a cotação do bitcoin
-/cripto + Código da cripto (Responde com a cotação da cripto)
-/fundamentus + Código da ação (Responde com o valor da ação)
 /graham + Código da ação (Responde com o preço justo segundo a fórmula de Graham)
-/fechamento (responde com as maiores altas e maiores baixas do ibov)`;
+/fechamento (responde com as maiores altas e maiores baixas do ibov)
+/cadastro (gerencia cadastro para receber a mensagem de fechamento)
+`;
 
 const alteraCadastroTemplate = `{{#if estavaCadastrado}}Olá {{nome}}, o chat atual foi descadastrado
 {{else}}Olá {{nome}}, este chat foi cadastrado para receber a mensagem de fechamento todos os dias.
@@ -42,14 +42,15 @@ const alteraCadastroTemplate = `{{#if estavaCadastrado}}Olá {{nome}}, o chat at
 
 const priceTemplate = `O preço da ação {{ticker}} é R$ {{lastPrice}} sendo a variação no dia de {{change}}%`;
 
-const grahamTemplate = `O preço justo da ação {{ticker}} segundo a fórmula de graham é: R$ {{precoJusto}} \n
-Com um {{resultado}} de {{descontoOuAgio}}% \n
-Preço: {{precoDaAcao}}`;
+const grahamTemplate = `O preço justo da ação {{ticker}} segundo a fórmula de graham é:
+R$ {{precoJusto}}
+Com um {{resultado}} de {{descontoOuAgio}}%
+Preço atual: {{precoDaAcao}}`;
 
 module.exports = {
   fechamentoTemplate,
   startTemplate,
   alteraCadastroTemplate,
   priceTemplate,
-  grahamTemplate
+  grahamTemplate,
 };
