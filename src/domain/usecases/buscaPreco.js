@@ -1,11 +1,11 @@
 const { usecase, step, Ok, Err, request } = require("@herbsjs/herbs");
-const TickerRequest = require("../entities/tickerRequest");
+const TickerRequest = require("../entities/TickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
-const Stock = require("../entities/stock");
+const Stock = require("../entities/Stock");
 const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
-  mfinance: new MFinanceClient(),
+  mfinance: MFinanceClient,
 };
 
 const buscaPreco = (injection) =>
@@ -31,7 +31,7 @@ const buscaPreco = (injection) =>
 
     "Puxa o preço da ação": step(async (ctx) => {
       const { ticker } = ctx.req;
-      const { mfinance } = ctx.di;
+      const mfinance = new ctx.di.mfinance();
 
       const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker);
       if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);

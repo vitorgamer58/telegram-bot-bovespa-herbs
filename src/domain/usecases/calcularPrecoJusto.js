@@ -1,11 +1,10 @@
 const { usecase, step, Ok, Err, request } = require("@herbsjs/herbs");
-const TickerRequest = require("../entities/tickerRequest");
+const TickerRequest = require("../entities/TickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const { herbarium } = require("@herbsjs/herbarium");
-const tickerRequest = require("../entities/tickerRequest");
 
 const dependency = {
-  mfinance: new MFinanceClient(),
+  mfinance: MFinanceClient,
 };
 
 const calcularPrecoJusto = (injection) =>
@@ -16,12 +15,16 @@ const calcularPrecoJusto = (injection) =>
       precoDaAcao: Number,
       precoJusto: String,
       descontoOuAgio: Number,
-      resultado: String
+      resultado: String,
     },
 
     authorize: () => Ok(),
 
-    setup: (ctx) => ((ctx.di = Object.assign({}, dependency, injection)), (ctx.data = {})),
+    setup: (ctx) => {
+      ctx.di = Object.assign({}, dependency, injection);
+      ctx.di.mfinanceInstance = new ctx.di.mfinance();
+      ctx.data = {};
+    },
 
     "Verifica a requisição": step((ctx) => {
       const tickerRequest = ctx.req;
@@ -34,9 +37,9 @@ const calcularPrecoJusto = (injection) =>
     "Puxa as informações da ação da API": step({
       "Puxa o preço da ação": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const { mfinance } = ctx.di;
+        const { mfinanceInstance } = ctx.di;
 
-        const dadosDePrecoRequest = await mfinance.buscarPrecoAcao(ticker);
+        const dadosDePrecoRequest = await mfinanceInstance.buscarPrecoAcao(ticker);
 
         if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);
         if (!dadosDePrecoRequest.ok.isValid()) return Err("Provavelmente o ticker está incorreto");
@@ -46,9 +49,9 @@ const calcularPrecoJusto = (injection) =>
       }),
       "Puxa os indicadores da açao": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const { mfinance } = ctx.di;
+        const { mfinanceInstance } = ctx.di;
 
-        const indicadoresDaAcaoRequest = await mfinance.buscarIndicadoresAcao(ticker);
+        const indicadoresDaAcaoRequest = await mfinanceInstance.buscarIndicadoresAcao(ticker);
         if (indicadoresDaAcaoRequest.isErr)
           return Err(`Erro ao buscar indicadores da ação ${ticker}`);
 

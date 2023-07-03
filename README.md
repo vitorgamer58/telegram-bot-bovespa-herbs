@@ -1,4 +1,4 @@
-# Telegram Bot Bovespa
+# Telegram Bot Bovespa Herbs
 Este é um bot de Telegram para consulta de preços de ações na Bolsa de Valores. Ele utiliza diversas APIs para obter indicadores financeiros, preços de ações e outras informações relevantes.
 
 ## Instalação

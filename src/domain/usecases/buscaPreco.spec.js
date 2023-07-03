@@ -1,9 +1,10 @@
 const { spec, scenario, given, check } = require("@herbsjs/aloe");
+const { Ok } = require("@herbsjs/herbs");
 const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
 const buscaPreco = require("./buscaPreco");
-const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
-const TickerRequest = require("../entities/tickerRequest");
+const TickerRequest = require("../entities/TickerRequest");
+const Stock = require("../entities/Stock");
 
 const tickerForTest = "ABCD3";
 
@@ -14,9 +15,15 @@ const buscaPrecoSpec = spec({
     "Dado uma ação válida": given({
       request: TickerRequest.fromJSON({ ticker: tickerForTest }),
       injection: {
-        mfinance: new MFinanceMock(tickerForTest, {
-          lastPrice: 100,
-        }),
+        mfinance: class {
+          buscarPrecoAcao() {
+            const stock = Stock.fromJSON({
+              lastprice: 100,
+            });
+
+            return Ok(stock);
+          }
+        },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
@@ -26,11 +33,9 @@ const buscaPrecoSpec = spec({
 
   "Deve responder com erro se a ação for inválida": scenario({
     "Dado uma ação inválida": given({
-      request: TickerRequest.fromJSON({ ticker: 'A1' }),
+      request: TickerRequest.fromJSON({ ticker: "A1" }),
       injection: {
-        mfinance: new MFinanceMock(tickerForTest, {
-          lastPrice: 100,
-        }),
+        mfinance: class {},
       },
     }),
     "Deve responder com erro": check((ctx) => {

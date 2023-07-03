@@ -13,8 +13,8 @@ const fechamentoSpec = spec({
     "Dado um dia útil": given({
       request: {},
       injection: {
-        mfinance: new MFinanceMock(),
-        indiceRepository: new IndiceRepositoryMock(),
+        mfinance: MFinanceMock,
+        indiceRepository: IndiceRepositoryMock,
         date: new Date(2023, 5, 21),
       },
     }),
@@ -27,8 +27,8 @@ const fechamentoSpec = spec({
     "Dado um dia não útil": given({
       request: {},
       injection: {
-        mfinance: new MFinanceMock(),
-        indiceRepository: new IndiceRepositoryMock(),
+        mfinance: MFinanceMock,
+        indiceRepository: IndiceRepositoryMock,
         date: new Date(2023, 5, 25),
       },
     }),
@@ -42,12 +42,12 @@ const fechamentoSpec = spec({
     "Dado um erro no indiceRepository": given({
       request: {},
       injection: {
-        mfinance: new MFinanceMock(),
-        indiceRepository: new (class {
+        mfinance: MFinanceMock,
+        indiceRepository: class {
           find() {
             throw new Error();
           }
-        })(),
+        },
         date: new Date(2023, 5, 21),
       },
     }),
@@ -61,12 +61,12 @@ const fechamentoSpec = spec({
     "Dado um erro na API MFinance": given({
       request: {},
       injection: {
-        mfinance: new (class {
+        mfinance: class {
           buscarTodasAcoes() {
             return Err("Erro ao se conectar com a API");
           }
-        })(),
-        indiceRepository: new IndiceRepositoryMock(),
+        },
+        indiceRepository: IndiceRepositoryMock,
         date: new Date(2023, 5, 21),
       },
     }),

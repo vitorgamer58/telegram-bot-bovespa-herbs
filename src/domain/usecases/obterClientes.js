@@ -1,32 +1,38 @@
 const { usecase, step, Ok, Err, checker } = require("@herbsjs/herbs");
 const ClientRepository = require("../../infra/database/clientRepository");
 const { herbarium } = require("@herbsjs/herbarium");
-const Client = require("../entities/client");
+const Client = require("../entities/Client");
 
 const dependency = {
-  clientRepository: new ClientRepository(),
+  clientRepository: ClientRepository,
 };
 
 const obterClientes = (injection) =>
   usecase("Obter clientes", {
     request: {},
 
-    response: [Client],
+    response: {
+      clientes: [Client],
+    },
 
     authorize: () => Ok(),
 
-    setup: (ctx) => (ctx.di = Object.assign({}, dependency, injection)),
+    setup: (ctx) => {
+      ctx.di = Object.assign({}, dependency, injection);
+    },
 
     "Busca a lista de clientes e retorna": step(async (ctx) => {
-      const { clientRepository } = ctx.di;
+      try {
+        const clientRepository = new ctx.di.clientRepository();
 
-      const clients = await clientRepository.find({});
+        const clients = await clientRepository.find({});
 
-      if (checker.isEmpty(clients)) return Err("Erro ao obter lista de clientes");
+        ctx.ret.clientes = clients;
 
-      ctx.ret.clientes = clients;
-
-      return Ok();
+        return Ok();
+      } catch (error) {
+        return Err(`Erro na camada de banco de dados: ${error.message}`);
+      }
     }),
   });
 

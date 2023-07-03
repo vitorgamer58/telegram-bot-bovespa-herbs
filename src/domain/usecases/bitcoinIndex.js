@@ -3,7 +3,7 @@ const { CoinSambaClient } = require("../../infra/clients/coinSambaClient");
 const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
-  coinSambaClient: new CoinSambaClient(),
+  coinSambaClient: CoinSambaClient,
 };
 
 const bitcoinIndex = (injection) =>
@@ -20,7 +20,7 @@ const bitcoinIndex = (injection) =>
     setup: (ctx) => (ctx.di = Object.assign({}, dependency, injection)),
 
     "Busca o preço do Bitcoin e retorna": step(async (ctx) => {
-      const { coinSambaClient } = ctx.di;
+      const coinSambaClient = new ctx.di.coinSambaClient();
 
       const bitcoinData = await coinSambaClient.buscarIndexBitcoin();
 

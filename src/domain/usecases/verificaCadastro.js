@@ -1,10 +1,10 @@
 const { usecase, step, Ok, Err, checker, request, ifElse } = require("@herbsjs/herbs");
 const ClientRepository = require("../../infra/database/clientRepository");
-const Client = require("../entities/client");
+const Client = require("../entities/Client");
 const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
-  clientRepository: new ClientRepository(),
+  clientRepository: ClientRepository,
 };
 
 const verificaCadastro = (injection) =>
@@ -34,7 +34,7 @@ const verificaCadastro = (injection) =>
 
     "Busca o cliente na base de dados": step(async (ctx) => {
       const client = ctx.req;
-      const { clientRepository } = ctx.di;
+      const clientRepository = new ctx.di.clientRepository();
 
       const clientFromDB = await clientRepository.find({
         filter: {
@@ -73,7 +73,7 @@ const verificaCadastro = (injection) =>
       "Senão: Atualiza o cadastro": step(async (ctx) => {
         const cliente = ctx.req;
         const { clientFromDB } = ctx.data;
-        const { clientRepository } = ctx.di;
+        const clientRepository = new ctx.di.clientRepository();
 
         const updatedClient = { ...clientFromDB, ...cliente };
         updatedClient.id = clientFromDB.id;

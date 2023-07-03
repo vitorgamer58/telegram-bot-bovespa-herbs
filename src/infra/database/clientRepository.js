@@ -1,6 +1,6 @@
 const { Repository } = require("@herbsjs/herbs2mongo");
 const connection = require("./connection");
-const Client = require("../../domain/entities/client");
+const Client = require("../../domain/entities/Client");
 const { herbarium } = require("@herbsjs/herbarium");
 const BotDataMapper = require("./dataMapper");
 

@@ -45,7 +45,7 @@ const priceTemplate = `O preço da ação {{ticker}} é R$ {{lastPrice}} sendo a
 const grahamTemplate = `O preço justo da ação {{ticker}} segundo a fórmula de graham é:
 R$ {{precoJusto}}
 Com um {{resultado}} de {{descontoOuAgio}}%
-Preço atual: {{precoDaAcao}}`;
+Preço atual: R$ {{precoDaAcao}}`;
 
 module.exports = {
   fechamentoTemplate,

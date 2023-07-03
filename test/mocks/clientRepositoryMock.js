@@ -1,4 +1,4 @@
-const Client = require("../../src/domain/entities/client");
+const Client = require("../../src/domain/entities/Client");
 
 class ClientRepositoryMock {
   constructor() {}

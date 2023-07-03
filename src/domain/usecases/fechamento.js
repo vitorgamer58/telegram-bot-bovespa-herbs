@@ -2,11 +2,11 @@ const { usecase, step, Ok, Err, checker } = require("@herbsjs/herbs");
 const IndiceRepository = require("../../infra/database/indiceRepository");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const { herbarium } = require("@herbsjs/herbarium");
-const Stock = require("../entities/stock");
+const Stock = require("../entities/Stock");
 
 const dependency = {
-  mfinance: new MFinanceClient(),
-  indiceRepository: new IndiceRepository(),
+  mfinance: MFinanceClient,
+  indiceRepository: IndiceRepository,
 };
 
 const fechamento = (injection) =>
@@ -43,7 +43,7 @@ const fechamento = (injection) =>
     }),
 
     "Busca os dados de todas as ações": step(async (ctx) => {
-      const { mfinance } = ctx.di;
+      const mfinance = new ctx.di.mfinance();
 
       const response = await mfinance.buscarTodasAcoes();
 
@@ -59,7 +59,7 @@ const fechamento = (injection) =>
 
     "Obtém a lista de todos os ativos que fazem parte do índice IBOV": step(async (ctx) => {
       try {
-        const { indiceRepository } = ctx.di;
+        const indiceRepository = new ctx.di.indiceRepository();
 
         const filtro = {
           filter: {

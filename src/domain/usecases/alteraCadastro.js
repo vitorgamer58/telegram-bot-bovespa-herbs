@@ -1,12 +1,12 @@
 const { usecase, step, Ok, Err, checker, request, ifElse } = require("@herbsjs/herbs");
 const ClientRepository = require("../../infra/database/clientRepository");
-const Client = require("../entities/client");
+const Client = require("../entities/Client");
 const verificaCadastro = require("./verificaCadastro");
 const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
-  clientRepository: new ClientRepository(),
-  verificaCadastroUsecase: verificaCadastro,
+  clientRepository: ClientRepository,
+  verificaCadastro: verificaCadastro,
 };
 
 const alteraCadastro = (injection) =>
@@ -21,6 +21,8 @@ const alteraCadastro = (injection) =>
 
     setup: (ctx) => {
       ctx.di = Object.assign({}, dependency, injection);
+      ctx.di.clientRepositoryInstance = new ctx.di.clientRepository();
+      ctx.di.verificaCadastroUsecase = ctx.di.verificaCadastro(ctx.di);
       ctx.data = {};
     },
 
@@ -38,9 +40,8 @@ const alteraCadastro = (injection) =>
       const { verificaCadastroUsecase } = ctx.di;
       const cliente = ctx.req;
 
-      const usecaseInstance = verificaCadastroUsecase();
-      await usecaseInstance.authorize();
-      const ucResponse = await usecaseInstance.run(cliente);
+      await verificaCadastroUsecase.authorize();
+      const ucResponse = await verificaCadastroUsecase.run(cliente);
 
       if (ucResponse.isErr) return Err("Erro ao buscar o cadastro");
 
@@ -56,10 +57,10 @@ const alteraCadastro = (injection) =>
       }),
 
       "Então: Deleta o cadastro": step(async (ctx) => {
-        const { clientRepository } = ctx.di;
+        const { clientRepositoryInstance } = ctx.di;
         const { cadastro } = ctx.data;
 
-        await clientRepository.delete(cadastro);
+        await clientRepositoryInstance.delete(cadastro);
 
         ctx.ret.estavaCadastrado = true;
 
@@ -68,9 +69,9 @@ const alteraCadastro = (injection) =>
 
       "Senão: Cadastra o usuário": step(async (ctx) => {
         const cliente = ctx.req;
-        const { clientRepository } = ctx.di;
+        const { clientRepositoryInstance } = ctx.di;
 
-        await clientRepository.insert(cliente);
+        await clientRepositoryInstance.insert(cliente);
 
         ctx.ret.estavaCadastrado = false;
 

@@ -1,6 +1,6 @@
 const { Repository } = require("@herbsjs/herbs2mongo");
 const connection = require("./connection");
-const Indice = require("../../domain/entities/indice");
+const Indice = require("../../domain/entities/Indice");
 const database = "clients_database";
 const { herbarium } = require("@herbsjs/herbarium");
 

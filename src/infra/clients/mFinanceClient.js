@@ -1,5 +1,5 @@
 const { Err, Ok } = require("@herbsjs/herbs");
-const Stock = require("../../domain/entities/stock");
+const Stock = require("../../domain/entities/Stock");
 const axios = require("axios");
 
 const dependency = { axios };

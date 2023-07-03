@@ -14,10 +14,10 @@ const {
   priceTemplate,
   grahamTemplate,
 } = require("../../domain/templates");
-const Client = require("../../domain/entities/client");
+const Client = require("../../domain/entities/Client");
 const verificaCadastro = require("../../domain/usecases/verificaCadastro");
 const alteraCadastro = require("../../domain/usecases/alteraCadastro");
-const TickerRequest = require("../../domain/entities/tickerRequest");
+const TickerRequest = require("../../domain/entities/TickerRequest");
 const config = require("../config");
 
 const runBot = () => {

@@ -1,9 +1,9 @@
 const { spec, scenario, given, check } = require("@herbsjs/aloe");
 const { herbarium } = require("@herbsjs/herbarium");
+const { Ok, Err } = require("@herbsjs/herbs");
 const assert = require("assert");
 const buscaFii = require("./buscaFii");
-const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
-const TickerRequest = require("../entities/tickerRequest");
+const TickerRequest = require("../entities/TickerRequest");
 
 const tickerForTest = "ABCD11";
 
@@ -14,14 +14,30 @@ const buscaFiiSpec = spec({
     "Dado um FII válido": given({
       request: TickerRequest.fromJSON({ ticker: tickerForTest }),
       injection: {
-        mfinance: new MFinanceMock(
-          tickerForTest,
-          {},
-          {
-            lastPrice: 100,
-            dividendoMensal: 1,
+        mfinance: class {
+          buscarPrecoFii(_) {
+            return Ok({
+              lastPrice: 100,
+            });
           }
-        ),
+
+          buscarDividendosFii(ticker) {
+            const dataAtual = new Date();
+
+            const dividendos = Array.from({ length: 12 }, (_, index) => {
+              if (index > 0) {
+                dataAtual.setMonth(dataAtual.getMonth() - 1);
+              }
+
+              return {
+                declaredDate: new Date(dataAtual),
+                value: 1,
+              };
+            });
+
+            return Ok(dividendos);
+          }
+        },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
@@ -35,11 +51,30 @@ const buscaFiiSpec = spec({
   "Deve responder com erro se o FII for inválido": scenario({
     "Dado um FII inválido": given({
       request: TickerRequest.fromJSON({ ticker: "A1" }),
-      injection: { mfinance: new MFinanceMock() },
+      injection: { mfinance: class {} },
     }),
     "Deve responder com erro": check((ctx) => {
       assert.ok(!ctx.response.isOk);
       assert.deepEqual(ctx.response.err, "Ticker inválido");
+    }),
+  }),
+
+  "Deve responder com erro se houver um erro para buscar o preço do FII": scenario({
+    "Dado um FII inválido": given({
+      request: TickerRequest.fromJSON({ ticker: tickerForTest }),
+      injection: {
+        mfinance: class {
+          buscarPrecoFii(_) {
+            return Err("Erro qualquer");
+          }
+        },
+      },
+    }),
+    "Deve responder com erro": check((ctx) => {
+      assert.ok(!ctx.response.isOk);
+    }),
+    "Deve responder com uma mensagem de erro": check((ctx) => {
+      assert.deepEqual(ctx.response.err, `Erro ao buscar dados do fii ${tickerForTest}`);
     }),
   }),
 });

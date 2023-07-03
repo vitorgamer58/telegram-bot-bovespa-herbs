@@ -1,5 +1,5 @@
 const { usecase, step, Ok, Err, request } = require("@herbsjs/herbs");
-const TickerRequest = require("../entities/tickerRequest");
+const TickerRequest = require("../entities/TickerRequest");
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const { herbarium } = require("@herbsjs/herbarium");
 
@@ -35,28 +35,27 @@ const buscaFii = (injection) =>
     "Puxa as informações da API": step({
       "Puxa o preço do FII": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const { mfinance } = ctx.di;
+        const mfinance = new ctx.di.mfinance();
 
         const dadosDePrecoRequest = await mfinance.buscarPrecoFii(ticker);
 
         if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados do fii ${ticker}`);
-        if (dadosDePrecoRequest.ok.lastPrice == 0)
-          return Err("Provavelmente o ticker está incorreto");
+        if (dadosDePrecoRequest.ok.lastPrice == 0) return Err("Provavelmente o ticker está incorreto");
 
         ctx.data.dadosDePreco = dadosDePrecoRequest.ok;
-        return Ok();
+        return Ok({ preco: dadosDePrecoRequest.ok });
       }),
 
       "Puxa os dividendos do FII": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const { mfinance } = ctx.di;
+        const mfinance = new ctx.di.mfinance();
 
         const dividendosRequest = await mfinance.buscarDividendosFii(ticker);
         if (dividendosRequest.isErr) return Err(`Erro ao buscar dividendos do fii ${ticker}`);
 
         ctx.data.todosDividendos = dividendosRequest.ok;
 
-        return Ok();
+        return Ok({ dividendos: dividendosRequest.ok });
       }),
     }),
 
@@ -70,15 +69,18 @@ const buscaFii = (injection) =>
         (dividendo) => new Date(dividendo.declaredDate) >= dataInicial
       );
 
-      return Ok();
+      return Ok({
+        dividendosDoAno: ctx.data.dividendosUltimoAno,
+      });
     }),
 
     "Calcula o dividend yield e retorna as informações": step((ctx) => {
       const { dividendosUltimoAno, dadosDePreco } = ctx.data;
 
-      let dividendosAcumulador = 0;
-
-      dividendosUltimoAno.forEach((dividendo) => (dividendosAcumulador += dividendo.value));
+      const dividendosAcumulador = dividendosUltimoAno.reduce(
+        (acumulador, dividendo) => acumulador + dividendo.value,
+        0
+      );
 
       const dividendYield = ((dividendosAcumulador / dadosDePreco.lastPrice) * 100).toFixed(2);
 

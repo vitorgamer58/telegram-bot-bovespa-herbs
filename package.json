@@ -1,5 +1,5 @@
 {
-  "name": "telegram-bot-herbs",
+  "name": "telegram-bot-bovespa-herbs",
   "version": "1.0.0",
   "description": "Telegram bot with Telegraf and HerbsJs",
   "main": "src/index.js",
@@ -24,7 +24,6 @@
     "prettier": "2.7.1"
   },
   "dependencies": {
-    "@herbsjs/gotu": "^1.2.0",
     "@herbsjs/herbarium": "^1.4.0",
     "@herbsjs/herbs": "^2.0.0",
     "@herbsjs/herbs2mongo": "^4.0.0",

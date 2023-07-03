@@ -3,9 +3,8 @@ const { Ok } = require("@herbsjs/herbs");
 const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
 const calcularPrecoJusto = require("./calcularPrecoJusto");
-const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
-const TickerRequest = require("../entities/tickerRequest");
-const Stock = require("../entities/stock");
+const TickerRequest = require("../entities/TickerRequest");
+const Stock = require("../entities/Stock");
 
 const tickerForTest = "ABCD3";
 
@@ -16,11 +15,26 @@ const calculaPrecoJustoSpec = spec({
     "Dado uma ação válida": given({
       request: TickerRequest.fromJSON({ ticker: tickerForTest }),
       injection: {
-        mfinance: new MFinanceMock(tickerForTest, {
-          lastPrice: 100,
-          bookValuePerShare: 90,
-          earningsPerShare: 12,
-        }),
+        mfinance: class {
+          buscarPrecoAcao(_) {
+            const stock = Stock.fromJSON({
+              lastprice: 100,
+            });
+
+            return Ok(stock);
+          }
+
+          buscarIndicadoresAcao(_) {
+            return Ok({
+              bookValuePerShare: {
+                value: 90,
+              },
+              earningsPerShare: {
+                value: 12,
+              },
+            });
+          }
+        },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
@@ -35,11 +49,26 @@ const calculaPrecoJustoSpec = spec({
     "Dado um ticker inválido": given({
       request: TickerRequest.fromJSON({ ticker: "A1" }),
       injection: {
-        mfinance: new MFinanceMock(tickerForTest, {
-          lastPrice: 100,
-          bookValuePerShare: 90,
-          earningsPerShare: 12,
-        }),
+        mfinance: class {
+          buscarPrecoAcao(_) {
+            const stock = Stock.fromJSON({
+              lastprice: 100,
+            });
+
+            return Ok(stock);
+          }
+
+          buscarIndicadoresAcao(_) {
+            return Ok({
+              bookValuePerShare: {
+                value: 90,
+              },
+              earningsPerShare: {
+                value: 12,
+              },
+            });
+          }
+        },
       },
     }),
     "Deve retornar erro": check((ctx) => {
@@ -54,7 +83,7 @@ const calculaPrecoJustoSpec = spec({
     "Dado um ticker válido": given({
       request: TickerRequest.fromJSON({ ticker: "ABCD3" }),
       injection: {
-        mfinance: new (class {
+        mfinance: class {
           buscarPrecoAcao(ticker) {
             return Ok(
               Stock.fromJSON({
@@ -63,7 +92,7 @@ const calculaPrecoJustoSpec = spec({
               })
             );
           }
-        })(),
+        },
       },
     }),
     "Deve retornar erro": check((ctx) => {

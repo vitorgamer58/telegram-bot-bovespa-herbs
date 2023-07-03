@@ -1,9 +1,8 @@
 const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { Err } = require("@herbsjs/herbs");
+const { Ok, Err } = require("@herbsjs/herbs");
 const { herbarium } = require("@herbsjs/herbarium");
 const assert = require("assert");
 const bitcoinIndex = require("./bitcoinIndex");
-const { CoinSambaMock } = require("../../../test/mocks/coinSambaMock");
 
 const bitcoinIndexSpec = spec({
   usecase: bitcoinIndex,
@@ -11,7 +10,14 @@ const bitcoinIndexSpec = spec({
   "Deve retornar o preço do Bitcoin": scenario({
     "Dado um UC válido": given({
       injection: {
-        coinSambaClient: new CoinSambaMock(100000, 1),
+        coinSambaClient: class {
+          buscarIndexBitcoin() {
+            return Ok({
+              close: 100000,
+              change: 1,
+            });
+          }
+        },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
@@ -26,11 +32,11 @@ const bitcoinIndexSpec = spec({
   "Não deve retornar se houver um erro no CoinSamba": scenario({
     "Dado um UC válido": given({
       injection: {
-        coinSambaClient: new (class {
+        coinSambaClient: class {
           buscarIndexBitcoin() {
             return Err("Erro");
           }
-        })(),
+        },
       },
     }),
     "Deve retornar erro": check((ctx) => {

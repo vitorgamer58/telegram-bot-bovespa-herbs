@@ -1,7 +1,7 @@
 const { Ok } = require("@herbsjs/herbs");
 const assert = require("assert");
 const jsonAcoes = require("./acoes.json");
-const Stock = require("../../src/domain/entities/stock");
+const Stock = require("../../src/domain/entities/Stock");
 
 class MFinanceMock {
   constructor(ticker, dadosdaacao = {}, dadosdofii = {}) {
@@ -63,7 +63,7 @@ class MFinanceMock {
       const dataAtual = new Date();
       dividendos.push({
         declaredDate: new Date(dataAtual.setMonth(dataAtual.getMonth() - index)),
-        value: this.fii.dividendoMensal,
+        value: 1,
       });
     }
 
