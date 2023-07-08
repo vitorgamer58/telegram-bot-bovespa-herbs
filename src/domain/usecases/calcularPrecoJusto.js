@@ -44,50 +44,41 @@ const calcularPrecoJusto = (injection) =>
         if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`);
         if (!dadosDePrecoRequest.ok.isValid()) return Err("Provavelmente o ticker está incorreto");
 
-        ctx.data.dadosDePreco = dadosDePrecoRequest.ok;
+        ctx.data.stock = dadosDePrecoRequest.ok;
+
         return Ok();
       }),
+
       "Puxa os indicadores da açao": step(async (ctx) => {
         const { ticker } = ctx.req;
+        const { stock } = ctx.data;
         const { mfinanceInstance } = ctx.di;
 
         const indicadoresDaAcaoRequest = await mfinanceInstance.buscarIndicadoresAcao(ticker);
         if (indicadoresDaAcaoRequest.isErr)
           return Err(`Erro ao buscar indicadores da ação ${ticker}`);
 
-        ctx.data.indicadoresDaAcao = indicadoresDaAcaoRequest.ok;
+        const indicadoresDaAcao = indicadoresDaAcaoRequest.ok;
+
+        stock.stockIndicators = indicadoresDaAcao;
 
         return Ok();
       }),
     }),
 
-    "Separa e verifica os indicadores": step((ctx) => {
-      const { dadosDePreco, indicadoresDaAcao } = ctx.data;
-
-      const valorPatrimonialPorAcao = indicadoresDaAcao.bookValuePerShare.value;
-      const lucroPorAcao = indicadoresDaAcao.earningsPerShare.value;
-
-      if (valorPatrimonialPorAcao <= 0 || lucroPorAcao <= 0) {
-        return Err(`Erro nos indicadores => VPA: ${valorPatrimonialPorAcao}, LPA: ${lucroPorAcao}`);
-      }
-
-      ctx.data.valorPatrimonialPorAcao = valorPatrimonialPorAcao;
-      ctx.data.lucroPorAcao = lucroPorAcao;
-      ctx.data.precoDaAcao = dadosDePreco.lastPrice;
-
-      return Ok();
-    }),
-
     "Calcula o preço justo da ação": step((ctx) => {
-      const { valorPatrimonialPorAcao, lucroPorAcao, precoDaAcao } = ctx.data;
+      const { stock } = ctx.data;
 
-      const preçoJusto = Math.sqrt(22.5 * valorPatrimonialPorAcao * lucroPorAcao);
-      const descontoOuAgio = ((precoDaAcao / preçoJusto - 1) * 100).toFixed(2);
+      const result = stock.calcularPrecoJusto();
+
+      if (result.isErr) return Err(result.err);
+
+      const descontoOuAgio = ((stock.lastPrice / stock.fairValue - 1) * 100).toFixed(2);
       const resultado = descontoOuAgio < 0 ? "desconto" : "ágio";
 
       ctx.ret = {
-        precoDaAcao,
-        precoJusto: preçoJusto.toFixed(2),
+        precoDaAcao: stock.lastPrice,
+        precoJusto: stock.fairValue.toFixed(2),
         descontoOuAgio: Math.abs(descontoOuAgio),
         resultado,
       };

@@ -4,6 +4,8 @@ const { Ok, Err } = require("@herbsjs/herbs");
 const assert = require("assert");
 const buscaFii = require("./buscaFii");
 const TickerRequest = require("../entities/TickerRequest");
+const Dividend = require("../entities/Dividend");
+const Fii = require("../entities/Fii");
 
 const tickerForTest = "ABCD11";
 
@@ -16,9 +18,11 @@ const buscaFiiSpec = spec({
       injection: {
         mfinance: class {
           buscarPrecoFii(_) {
-            return Ok({
-              lastPrice: 100,
-            });
+            return Ok(
+              Fii.fromJSON({
+                lastPrice: 100,
+              })
+            );
           }
 
           buscarDividendosFii(ticker) {
@@ -35,7 +39,9 @@ const buscaFiiSpec = spec({
               };
             });
 
-            return Ok(dividendos);
+            const dividendEntity = dividendos.map((item) => Dividend.fromJSON(item));
+
+            return Ok(dividendEntity);
           }
         },
       },

@@ -5,6 +5,7 @@ const assert = require("assert");
 const calcularPrecoJusto = require("./calcularPrecoJusto");
 const TickerRequest = require("../entities/TickerRequest");
 const Stock = require("../entities/Stock");
+const StockIndicators = require("../entities/StockIndicators")
 
 const tickerForTest = "ABCD3";
 
@@ -25,14 +26,16 @@ const calculaPrecoJustoSpec = spec({
           }
 
           buscarIndicadoresAcao(_) {
-            return Ok({
-              bookValuePerShare: {
-                value: 90,
-              },
-              earningsPerShare: {
-                value: 12,
-              },
-            });
+            return Ok(
+              StockIndicators.fromMFinance({
+                bookValuePerShare: {
+                  value: 90,
+                },
+                earningsPerShare: {
+                  value: 12,
+                },
+              })
+            );
           }
         },
       },
@@ -59,14 +62,16 @@ const calculaPrecoJustoSpec = spec({
           }
 
           buscarIndicadoresAcao(_) {
-            return Ok({
-              bookValuePerShare: {
-                value: 90,
-              },
-              earningsPerShare: {
-                value: 12,
-              },
-            });
+            return Ok(
+              StockIndicators.fromMFinance({
+                bookValuePerShare: {
+                  value: 90,
+                },
+                earningsPerShare: {
+                  value: 12,
+                },
+              })
+            );
           }
         },
       },

@@ -4,7 +4,7 @@ const { MFinanceClient } = require("../../infra/clients/mFinanceClient");
 const { herbarium } = require("@herbsjs/herbarium");
 
 const dependency = {
-  mfinance: new MFinanceClient(),
+  mfinance: MFinanceClient,
 };
 
 const buscaFii = (injection) =>
@@ -22,6 +22,7 @@ const buscaFii = (injection) =>
     setup: (ctx) => {
       ctx.di = Object.assign({}, dependency, injection);
       ctx.data = {};
+      ctx.di.mfinanceInstance = new ctx.di.mfinance();
     },
 
     "Verifica a requisição": step((ctx) => {
@@ -35,59 +36,46 @@ const buscaFii = (injection) =>
     "Puxa as informações da API": step({
       "Puxa o preço do FII": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const mfinance = new ctx.di.mfinance();
+        const { mfinanceInstance } = ctx.di;
 
-        const dadosDePrecoRequest = await mfinance.buscarPrecoFii(ticker);
+        const buscaFiiRequest = await mfinanceInstance.buscarPrecoFii(ticker);
 
-        if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados do fii ${ticker}`);
-        if (dadosDePrecoRequest.ok.lastPrice == 0) return Err("Provavelmente o ticker está incorreto");
+        if (buscaFiiRequest.isErr) return Err(`Erro ao buscar dados do fii ${ticker}`);
 
-        ctx.data.dadosDePreco = dadosDePrecoRequest.ok;
-        return Ok({ preco: dadosDePrecoRequest.ok });
+        ctx.data.fii = buscaFiiRequest.ok;
+
+        return Ok({ fii: buscaFiiRequest.ok });
       }),
 
       "Puxa os dividendos do FII": step(async (ctx) => {
         const { ticker } = ctx.req;
-        const mfinance = new ctx.di.mfinance();
+        const { fii } = ctx.data;
+        const { mfinanceInstance } = ctx.di;
 
-        const dividendosRequest = await mfinance.buscarDividendosFii(ticker);
+        const dividendosRequest = await mfinanceInstance.buscarDividendosFii(ticker);
         if (dividendosRequest.isErr) return Err(`Erro ao buscar dividendos do fii ${ticker}`);
 
-        ctx.data.todosDividendos = dividendosRequest.ok;
+        fii.dividendos = dividendosRequest.ok;
 
         return Ok({ dividendos: dividendosRequest.ok });
       }),
     }),
 
-    "Filtra os dividendos por data": step((ctx) => {
-      const { todosDividendos } = ctx.data;
+    "Calcula o dividend yield": step((ctx) => {
+      const { fii } = ctx.data;
 
-      const dataAtual = new Date();
-      const dataInicial = new Date(dataAtual.setMonth(dataAtual.getMonth() - 12));
+      fii.calcularDividendYield();
 
-      ctx.data.dividendosUltimoAno = todosDividendos.filter(
-        (dividendo) => new Date(dividendo.declaredDate) >= dataInicial
-      );
-
-      return Ok({
-        dividendosDoAno: ctx.data.dividendosUltimoAno,
-      });
+      return Ok();
     }),
 
-    "Calcula o dividend yield e retorna as informações": step((ctx) => {
-      const { dividendosUltimoAno, dadosDePreco } = ctx.data;
-
-      const dividendosAcumulador = dividendosUltimoAno.reduce(
-        (acumulador, dividendo) => acumulador + dividendo.value,
-        0
-      );
-
-      const dividendYield = ((dividendosAcumulador / dadosDePreco.lastPrice) * 100).toFixed(2);
+    "Retorna as informações": step((ctx) => {
+      const { fii } = ctx.data;
 
       ctx.ret = {
-        preco: dadosDePreco.lastPrice,
-        dividendos: dividendosAcumulador.toFixed(2),
-        dividendYield: dividendYield,
+        preco: fii.lastPrice,
+        dividendos: fii.dividendosUltimoAno.toFixed(2),
+        dividendYield: fii.dividendYield.toFixed(2),
       };
 
       return Ok();
