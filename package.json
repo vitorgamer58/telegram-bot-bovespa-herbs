@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/index.js",
     "start:dev": "nodemon src/index.js",
-    "test": "herbs spec"
+    "test": "herbs spec",
+    "lint": "npx eslint \"**/*.{js,jsx}\" --quiet",
+    "lint:fix": "npx eslint \"**/*.{js,jsx}\" --fix"
   },
   "keywords": [
     "telegraf",
@@ -19,6 +21,7 @@
     "@herbsjs/aloe": "^2.3.0-beta.1",
     "@herbsjs/herbs-cli": "^2.19.0-beta.5",
     "@herbsjs/herbsshelf": "^5.0.1",
+    "eslint": "^8.45.0",
     "express": "^4.18.2",
     "nodemon": "^2.0.20",
     "prettier": "2.7.1"

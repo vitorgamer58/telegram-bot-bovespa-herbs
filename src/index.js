@@ -1,11 +1,11 @@
-require("dotenv").config();
-const runBot = require("./infra/bot");
-const cronJobs = require("./infra/cron");
-const server = require("./infra/api/server");
-const config = require("./infra/config");
+require("dotenv").config()
+const runBot = require("./infra/bot")
+const cronJobs = require("./infra/cron")
+const server = require("./infra/api/server")
+const config = require("./infra/config")
 
-const botInstance = runBot();
+const botInstance = runBot()
 
-cronJobs(botInstance);
+cronJobs(botInstance)
 
-if (config.isDevelopment) server.start();
+if (config.isDevelopment) server.start()

@@ -1,11 +1,11 @@
-const { herbarium } = require("@herbsjs/herbarium");
-const { entity, field, id, checker } = require("@herbsjs/herbs");
+const { herbarium } = require("@herbsjs/herbarium")
+const { entity, field, id, checker } = require("@herbsjs/herbs")
 
 const Group = entity("Group", {
   title: field(String),
   members: field(Number),
   admins: field([String]),
-});
+})
 
 const Client = entity("Client", {
   id: id(String),
@@ -13,27 +13,27 @@ const Client = entity("Client", {
   type: field(String, { validation: { presence: false } }),
   chat_id: field(Number, { validation: { presence: true } }),
   group: field(Group, { validation: { presence: false } }),
-});
+})
 
 const fromTelegram = ({ username, type, chatId, groupInfo }) => {
-  const client = new Client();
+  const client = new Client()
 
-  client.username = username;
-  client.type = type;
-  client.chat_id = chatId;
+  client.username = username
+  client.type = type
+  client.chat_id = chatId
 
   if (!checker.isEmpty(groupInfo)) {
     const group = Group.fromJSON({
       ...groupInfo,
       admins: groupInfo.admins.map((admin) => admin?.user?.username),
-    });
+    })
 
-    client.group = group;
+    client.group = group
   }
 
-  return client;
-};
+  return client
+}
 
-herbarium.entities.add(Group, "Group").entity;
-module.exports = herbarium.entities.add(Client, "Client").entity;
-module.exports.fromTelegram = fromTelegram;
+herbarium.entities.add(Group, "Group").entity
+module.exports = herbarium.entities.add(Client, "Client").entity
+module.exports.fromTelegram = fromTelegram

@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config()
 
 module.exports = {
   isDevelopment: process.env.ENVIROMENT == "development",
@@ -6,4 +6,4 @@ module.exports = {
   ownerChatId: process.env.OWNER_CHAT_ID,
   cron: require("./cron"),
   database: require("./mongo"),
-};
+}

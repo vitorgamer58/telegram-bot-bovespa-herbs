@@ -1,8 +1,8 @@
-const Handlebars = require("handlebars");
+const Handlebars = require("handlebars")
 
-const numberEmojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"];
+const numberEmojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
 
-Handlebars.registerHelper("emojiForIndex", (index) => numberEmojis[index]);
+Handlebars.registerHelper("emojiForIndex", (index) => numberEmojis[index])
 
 const fechamentoTemplate = `
 Confira os dados de fechamento do pregão!🦈
@@ -25,7 +25,7 @@ Confira os dados de fechamento do pregão!🦈
 {{#each maisNegociadas}}
 {{emojiForIndex @index}}️ {{this.symbol}} {{this.change}}%
 {{/each}}
-`;
+`
 
 const startTemplate = `Bem vindo {{firstName}}, eu sou um robô, alguns dos meus comandos são:
 /price + Código da ação (Responde com o valor da ação)
@@ -33,19 +33,19 @@ const startTemplate = `Bem vindo {{firstName}}, eu sou um robô, alguns dos meus
 /graham + Código da ação (Responde com o preço justo segundo a fórmula de Graham)
 /fechamento (responde com as maiores altas e maiores baixas do ibov)
 /cadastro (gerencia cadastro para receber a mensagem de fechamento)
-`;
+`
 
 const alteraCadastroTemplate = `{{#if estavaCadastrado}}Olá {{nome}}, o chat atual foi descadastrado
 {{else}}Olá {{nome}}, este chat foi cadastrado para receber a mensagem de fechamento todos os dias.
 {{/if}}
-`;
+`
 
-const priceTemplate = `O preço da ação {{ticker}} é R$ {{lastPrice}} sendo a variação no dia de {{change}}%`;
+const priceTemplate = "O preço da ação {{ticker}} é R$ {{lastPrice}} sendo a variação no dia de {{change}}%"
 
 const grahamTemplate = `O preço justo da ação {{ticker}} segundo a fórmula de graham é:
 R$ {{precoJusto}}
 Com um {{resultado}} de {{descontoOuAgio}}%
-Preço atual: R$ {{precoDaAcao}}`;
+Preço atual: R$ {{precoDaAcao}}`
 
 module.exports = {
   fechamentoTemplate,
@@ -53,4 +53,4 @@ module.exports = {
   alteraCadastroTemplate,
   priceTemplate,
   grahamTemplate,
-};
+}

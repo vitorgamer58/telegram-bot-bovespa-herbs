@@ -1,13 +1,13 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { herbarium } = require("@herbsjs/herbarium");
-const { Ok, Err } = require("@herbsjs/herbs");
-const assert = require("assert");
-const buscaFii = require("./buscaFii");
-const TickerRequest = require("../entities/TickerRequest");
-const Dividend = require("../entities/Dividend");
-const Fii = require("../entities/Fii");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { herbarium } = require("@herbsjs/herbarium")
+const { Ok, Err } = require("@herbsjs/herbs")
+const assert = require("assert")
+const buscaFii = require("./buscaFii")
+const TickerRequest = require("../entities/TickerRequest")
+const Dividend = require("../entities/Dividend")
+const Fii = require("../entities/Fii")
 
-const tickerForTest = "ABCD11";
+const tickerForTest = "ABCD11"
 
 const buscaFiiSpec = spec({
   usecase: buscaFii,
@@ -22,35 +22,35 @@ const buscaFiiSpec = spec({
               Fii.fromJSON({
                 lastPrice: 100,
               })
-            );
+            )
           }
 
-          buscarDividendosFii(ticker) {
-            const dataAtual = new Date();
+          buscarDividendosFii() {
+            const dataAtual = new Date()
 
             const dividendos = Array.from({ length: 12 }, (_, index) => {
               if (index > 0) {
-                dataAtual.setMonth(dataAtual.getMonth() - 1);
+                dataAtual.setMonth(dataAtual.getMonth() - 1)
               }
 
               return {
                 declaredDate: new Date(dataAtual),
                 value: 1,
-              };
-            });
+              }
+            })
 
-            const dividendEntity = dividendos.map((item) => Dividend.fromJSON(item));
+            const dividendEntity = dividendos.map((item) => Dividend.fromJSON(item))
 
-            return Ok(dividendEntity);
+            return Ok(dividendEntity)
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve calcular os dados corretamente": check((ctx) => {
-      assert.equal(ctx.response.ok.dividendos, "12.00");
+      assert.equal(ctx.response.ok.dividendos, "12.00")
     }),
   }),
 
@@ -60,8 +60,8 @@ const buscaFiiSpec = spec({
       injection: { mfinance: class {} },
     }),
     "Deve responder com erro": check((ctx) => {
-      assert.ok(!ctx.response.isOk);
-      assert.deepEqual(ctx.response.err, "Ticker inválido");
+      assert.ok(!ctx.response.isOk)
+      assert.deepEqual(ctx.response.err, "Ticker inválido")
     }),
   }),
 
@@ -71,20 +71,20 @@ const buscaFiiSpec = spec({
       injection: {
         mfinance: class {
           buscarPrecoFii(_) {
-            return Err("Erro qualquer");
+            return Err("Erro qualquer")
           }
         },
       },
     }),
     "Deve responder com erro": check((ctx) => {
-      assert.ok(!ctx.response.isOk);
+      assert.ok(!ctx.response.isOk)
     }),
     "Deve responder com uma mensagem de erro": check((ctx) => {
-      assert.deepEqual(ctx.response.err, `Erro ao buscar dados do fii ${tickerForTest}`);
+      assert.deepEqual(ctx.response.err, `Erro ao buscar dados do fii ${tickerForTest}`)
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(buscaFiiSpec, "buscaFiiSpec")
-  .metadata({ usecase: "BuscaFii" }).spec;
+  .metadata({ usecase: "BuscaFii" }).spec

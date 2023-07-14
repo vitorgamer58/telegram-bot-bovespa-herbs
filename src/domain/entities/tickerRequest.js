@@ -1,5 +1,5 @@
-const { entity, field } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
+const { entity, field } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
 
 const TickerRequest = entity("TickerRequest", {
   ticker: field(String, {
@@ -11,6 +11,6 @@ const TickerRequest = entity("TickerRequest", {
       },
     },
   }),
-});
+})
 
-module.exports = herbarium.entities.add(TickerRequest, "TickerRequest").entity;
+module.exports = herbarium.entities.add(TickerRequest, "TickerRequest").entity

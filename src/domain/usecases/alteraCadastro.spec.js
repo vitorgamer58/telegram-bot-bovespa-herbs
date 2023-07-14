@@ -1,8 +1,8 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { herbarium } = require("@herbsjs/herbarium");
-const assert = require("assert");
-const alteraCadastro = require("./alteraCadastro");
-const Client = require("../entities/Client");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { herbarium } = require("@herbsjs/herbarium")
+const assert = require("assert")
+const alteraCadastro = require("./alteraCadastro")
+const Client = require("../entities/Client")
 
 const alteraCadastroSpec = spec({
   usecase: alteraCadastro,
@@ -15,20 +15,20 @@ const alteraCadastroSpec = spec({
       injection: {
         clientRepository: class {
           find(_) {
-            return [];
+            return []
           }
 
           insert(_) {
-            return;
+            return
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve cadastrar o cliente": check((ctx) => {
-      assert.equal(ctx.response.ok.estavaCadastrado, false);
+      assert.equal(ctx.response.ok.estavaCadastrado, false)
     }),
   }),
 
@@ -45,24 +45,24 @@ const alteraCadastroSpec = spec({
                 chat_id: 11121245,
                 type: "Private",
               }),
-            ];
+            ]
           }
 
           delete(_) {
-            return;
+            return
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve descadastrar o cliente": check((ctx) => {
-      assert.equal(ctx.response.ok.estavaCadastrado, true);
+      assert.equal(ctx.response.ok.estavaCadastrado, true)
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(alteraCadastroSpec, "alteraCadastroSpec")
-  .metadata({ usecase: "AlteraCadastro" }).spec;
+  .metadata({ usecase: "AlteraCadastro" }).spec

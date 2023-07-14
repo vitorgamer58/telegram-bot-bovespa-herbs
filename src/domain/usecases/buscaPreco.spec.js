@@ -1,12 +1,12 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { Ok } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
-const assert = require("assert");
-const buscaPreco = require("./buscaPreco");
-const TickerRequest = require("../entities/TickerRequest");
-const Stock = require("../entities/Stock");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { Ok } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
+const assert = require("assert")
+const buscaPreco = require("./buscaPreco")
+const TickerRequest = require("../entities/TickerRequest")
+const Stock = require("../entities/Stock")
 
-const tickerForTest = "ABCD3";
+const tickerForTest = "ABCD3"
 
 const buscaPrecoSpec = spec({
   usecase: buscaPreco,
@@ -19,15 +19,15 @@ const buscaPrecoSpec = spec({
           buscarPrecoAcao() {
             const stock = Stock.fromJSON({
               lastprice: 100,
-            });
+            })
 
-            return Ok(stock);
+            return Ok(stock)
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
   }),
 
@@ -39,12 +39,12 @@ const buscaPrecoSpec = spec({
       },
     }),
     "Deve responder com erro": check((ctx) => {
-      assert.ok(!ctx.response.isOk);
-      assert.deepEqual(ctx.response.err, "Ticker inválido");
+      assert.ok(!ctx.response.isOk)
+      assert.deepEqual(ctx.response.err, "Ticker inválido")
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(buscaPrecoSpec, "buscaPrecoSpec")
-  .metadata({ usecase: "BuscaPreco" }).spec;
+  .metadata({ usecase: "BuscaPreco" }).spec

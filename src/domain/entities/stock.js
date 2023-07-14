@@ -1,6 +1,6 @@
-const { entity, field, Ok, Err } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
-const StockIndicators = require("./StockIndicators");
+const { entity, field, Ok, Err } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
+const StockIndicators = require("./StockIndicators")
 
 const Stock = entity("Stock", {
   lastPrice: field(Number, {
@@ -16,17 +16,17 @@ const Stock = entity("Stock", {
   stockIndicators: field(StockIndicators),
 
   calcularPrecoJusto() {
-    const valorPatrimonialPorAcao = this.stockIndicators.bookValuePerShare;
-    const lucroPorAcao = this.stockIndicators.earningsPerShare;
+    const valorPatrimonialPorAcao = this.stockIndicators.bookValuePerShare
+    const lucroPorAcao = this.stockIndicators.earningsPerShare
 
     if (valorPatrimonialPorAcao <= 0 || lucroPorAcao <= 0) {
-      return Err(`Erro nos indicadores => VPA: ${valorPatrimonialPorAcao}, LPA: ${lucroPorAcao}`);
+      return Err(`Erro nos indicadores => VPA: ${valorPatrimonialPorAcao}, LPA: ${lucroPorAcao}`)
     }
 
-    this.fairValue = Math.sqrt(22.5 * valorPatrimonialPorAcao * lucroPorAcao);
+    this.fairValue = Math.sqrt(22.5 * valorPatrimonialPorAcao * lucroPorAcao)
 
-    return Ok();
+    return Ok()
   },
-});
+})
 
-module.exports = herbarium.entities.add(Stock, "Stock").entity;
+module.exports = herbarium.entities.add(Stock, "Stock").entity

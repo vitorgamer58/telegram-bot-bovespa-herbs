@@ -1,8 +1,8 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { herbarium } = require("@herbsjs/herbarium");
-const assert = require("assert");
-const verificaCadastro = require("./verificaCadastro");
-const Client = require("../entities/Client");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { herbarium } = require("@herbsjs/herbarium")
+const assert = require("assert")
+const verificaCadastro = require("./verificaCadastro")
+const Client = require("../entities/Client")
 
 const verificaCadastroSpec = spec({
   usecase: verificaCadastro,
@@ -15,16 +15,16 @@ const verificaCadastroSpec = spec({
       injection: {
         clientRepository: class {
           find(_) {
-            return [];
+            return []
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve retornar a informação de que ele não estava cadastrado": check((ctx) => {
-      assert.equal(ctx.response.ok.estaCadastrado, false);
+      assert.equal(ctx.response.ok.estaCadastrado, false)
     }),
   }),
 
@@ -42,31 +42,31 @@ const verificaCadastroSpec = spec({
                 chat_id: 11121245,
                 type: "undefined",
               }),
-            ];
+            ]
           }
 
           update(_) {
-            return;
+            return
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve retornar a informação de que ele esta cadastrado": check((ctx) => {
-      assert.equal(ctx.response.ok.estaCadastrado, true);
+      assert.equal(ctx.response.ok.estaCadastrado, true)
     }),
     "Deve retornar a informação de que o cadastro foi atualizado": check((ctx) => {
-      assert.equal(ctx.response.ok.cadastroAtualizado, true);
+      assert.equal(ctx.response.ok.cadastroAtualizado, true)
     }),
     "Deve retornar o cliente": check((ctx) => {
-      assert.equal(typeof ctx.response.ok.cliente, "object");
-      assert.equal(ctx.response.ok.cliente.type, "Private");
+      assert.equal(typeof ctx.response.ok.cliente, "object")
+      assert.equal(ctx.response.ok.cliente.type, "Private")
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(verificaCadastroSpec, "verificaCadastroSpec")
-  .metadata({ usecase: "VerificaCadastro" }).spec;
+  .metadata({ usecase: "VerificaCadastro" }).spec

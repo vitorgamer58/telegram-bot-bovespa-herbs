@@ -1,9 +1,9 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { herbarium } = require("@herbsjs/herbarium");
-const { ClientRepositoryMock } = require("../../../test/mocks/clientRepositoryMock");
-const obterClientes = require("./obterClientes");
-const assert = require("assert");
-const Client = require("../entities/Client");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { herbarium } = require("@herbsjs/herbarium")
+const { ClientRepositoryMock } = require("../../../test/mocks/clientRepositoryMock")
+const obterClientes = require("./obterClientes")
+const assert = require("assert")
+const Client = require("../entities/Client")
 
 const obterClientesSpec = spec({
   usecase: obterClientes,
@@ -16,10 +16,10 @@ const obterClientesSpec = spec({
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve retornar uma lista de clientes": check((ctx) => {
-      assert.ok(ctx.response.ok.clientes[0] instanceof Client);
+      assert.ok(ctx.response.ok.clientes[0] instanceof Client)
     }),
   }),
 
@@ -29,16 +29,16 @@ const obterClientesSpec = spec({
       injection: {
         clientRepository: class {
           find() {
-            throw Error("TIMEOUT");
+            throw Error("TIMEOUT")
           }
         },
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(ctx.response.isErr);
+      assert.ok(ctx.response.isErr)
     }),
     "Mensagem de erro deve estar de acordo": check((ctx) => {
-      assert.equal(ctx.response.err, "Erro na camada de banco de dados: TIMEOUT");
+      assert.equal(ctx.response.err, "Erro na camada de banco de dados: TIMEOUT")
     }),
   }),
 
@@ -48,17 +48,17 @@ const obterClientesSpec = spec({
       injection: {
         clientRepository: class {
           find() {
-            return [];
+            return []
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(obterClientesSpec, "obterClientesSpec")
-  .metadata({ usecase: "ObterClientes" }).spec;
+  .metadata({ usecase: "ObterClientes" }).spec

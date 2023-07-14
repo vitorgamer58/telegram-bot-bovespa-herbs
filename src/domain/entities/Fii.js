@@ -1,6 +1,6 @@
-const { entity, field } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
-const Dividendo = require("./Dividend");
+const { entity, field } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
+const Dividendo = require("./Dividend")
 
 const Fii = entity("Fii", {
   lastPrice: field(Number, {
@@ -18,32 +18,32 @@ const Fii = entity("Fii", {
   dividendYield: field(String),
 
   calcularDividendYield() {
-    const dataAtual = new Date();
-    const dataInicial = new Date(dataAtual.setMonth(dataAtual.getMonth() - 12));
+    const dataAtual = new Date()
+    const dataInicial = new Date(dataAtual.setMonth(dataAtual.getMonth() - 12))
 
     const dividendosUltimoAno = this.dividendos.filter(
       (dividendo) => new Date(dividendo.declaredDate) >= dataInicial
-    );
+    )
 
     const dividendosAcumulador = dividendosUltimoAno.reduce(
       (acumulador, dividendo) => acumulador + dividendo.value,
       0
-    );
+    )
 
-    const dividendYield = (dividendosAcumulador / this.lastPrice) * 100;
+    const dividendYield = (dividendosAcumulador / this.lastPrice) * 100
 
-    this.dividendYield = dividendYield;
-    this.dividendosUltimoAno = dividendosAcumulador;
+    this.dividendYield = dividendYield
+    this.dividendosUltimoAno = dividendosAcumulador
   },
-});
+})
 
 const fromMFinance = (params) => {
-  const fii = Fii.fromJSON(params);
+  const fii = Fii.fromJSON(params)
 
-  delete fii.dividendYield;
+  delete fii.dividendYield
 
-  return fii;
-};
+  return fii
+}
 
-module.exports = herbarium.entities.add(Fii, "Fii").entity;
-module.exports.fromMFinance = fromMFinance;
+module.exports = herbarium.entities.add(Fii, "Fii").entity
+module.exports.fromMFinance = fromMFinance

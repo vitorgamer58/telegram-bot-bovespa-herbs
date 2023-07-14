@@ -1,10 +1,10 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { Err } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
-const assert = require("assert");
-const fechamento = require("./fechamento");
-const { MFinanceMock } = require("../../../test/mocks/mFinanceMock");
-const { IndiceRepositoryMock } = require("../../../test/mocks/indiceRepositoryMock");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { Err } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
+const assert = require("assert")
+const fechamento = require("./fechamento")
+const { MFinanceMock } = require("../../../test/mocks/mFinanceMock")
+const { IndiceRepositoryMock } = require("../../../test/mocks/indiceRepositoryMock")
 
 const fechamentoSpec = spec({
   usecase: fechamento,
@@ -19,7 +19,7 @@ const fechamentoSpec = spec({
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
   }),
 
@@ -33,8 +33,8 @@ const fechamentoSpec = spec({
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(ctx.response.isErr);
-      assert.equal(ctx.response.err, "Hoje não é um dia útil");
+      assert.ok(ctx.response.isErr)
+      assert.equal(ctx.response.err, "Hoje não é um dia útil")
     }),
   }),
 
@@ -45,15 +45,15 @@ const fechamentoSpec = spec({
         mfinance: MFinanceMock,
         indiceRepository: class {
           find() {
-            throw new Error();
+            throw new Error()
           }
         },
         date: new Date(2023, 5, 21),
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(ctx.response.isErr);
-      assert.equal(ctx.response.err, "Erro no banco de dados");
+      assert.ok(ctx.response.isErr)
+      assert.equal(ctx.response.err, "Erro no banco de dados")
     }),
   }),
 
@@ -63,7 +63,7 @@ const fechamentoSpec = spec({
       injection: {
         mfinance: class {
           buscarTodasAcoes() {
-            return Err("Erro ao se conectar com a API");
+            return Err("Erro ao se conectar com a API")
           }
         },
         indiceRepository: IndiceRepositoryMock,
@@ -71,12 +71,12 @@ const fechamentoSpec = spec({
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(ctx.response.isErr);
-      assert.equal(ctx.response.err, "Não foi possível obter a lista de ações");
+      assert.ok(ctx.response.isErr)
+      assert.equal(ctx.response.err, "Não foi possível obter a lista de ações")
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(fechamentoSpec, "fechamentoSpec")
-  .metadata({ usecase: "Fechamento" }).spec;
+  .metadata({ usecase: "Fechamento" }).spec

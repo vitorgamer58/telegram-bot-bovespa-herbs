@@ -1,8 +1,8 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { Ok, Err } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
-const assert = require("assert");
-const bitcoinIndex = require("./bitcoinIndex");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { Ok, Err } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
+const assert = require("assert")
+const bitcoinIndex = require("./bitcoinIndex")
 
 const bitcoinIndexSpec = spec({
   usecase: bitcoinIndex,
@@ -15,17 +15,17 @@ const bitcoinIndexSpec = spec({
             return Ok({
               close: 100000,
               change: 1,
-            });
+            })
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve retornar o preço do Bitcoin": check((ctx) => {
-      assert.deepEqual(ctx.response.ok.preco, "100000.00");
-      assert.deepEqual(ctx.response.ok.variacao, "1.00");
+      assert.deepEqual(ctx.response.ok.preco, "100000.00")
+      assert.deepEqual(ctx.response.ok.variacao, "1.00")
     }),
   }),
 
@@ -34,17 +34,17 @@ const bitcoinIndexSpec = spec({
       injection: {
         coinSambaClient: class {
           buscarIndexBitcoin() {
-            return Err("Erro");
+            return Err("Erro")
           }
         },
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(ctx.response.isErr);
+      assert.ok(ctx.response.isErr)
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(bitcoinIndexSpec, "bitcoinIndexSpec")
-  .metadata({ usecase: "BitcoinIndex" }).spec;
+  .metadata({ usecase: "BitcoinIndex" }).spec

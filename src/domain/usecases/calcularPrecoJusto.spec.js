@@ -1,13 +1,13 @@
-const { spec, scenario, given, check } = require("@herbsjs/aloe");
-const { Ok } = require("@herbsjs/herbs");
-const { herbarium } = require("@herbsjs/herbarium");
-const assert = require("assert");
-const calcularPrecoJusto = require("./calcularPrecoJusto");
-const TickerRequest = require("../entities/TickerRequest");
-const Stock = require("../entities/Stock");
+const { spec, scenario, given, check } = require("@herbsjs/aloe")
+const { Ok } = require("@herbsjs/herbs")
+const { herbarium } = require("@herbsjs/herbarium")
+const assert = require("assert")
+const calcularPrecoJusto = require("./calcularPrecoJusto")
+const TickerRequest = require("../entities/TickerRequest")
+const Stock = require("../entities/Stock")
 const StockIndicators = require("../entities/StockIndicators")
 
-const tickerForTest = "ABCD3";
+const tickerForTest = "ABCD3"
 
 const calculaPrecoJustoSpec = spec({
   usecase: calcularPrecoJusto,
@@ -20,9 +20,9 @@ const calculaPrecoJustoSpec = spec({
           buscarPrecoAcao(_) {
             const stock = Stock.fromJSON({
               lastprice: 100,
-            });
+            })
 
-            return Ok(stock);
+            return Ok(stock)
           }
 
           buscarIndicadoresAcao(_) {
@@ -35,16 +35,16 @@ const calculaPrecoJustoSpec = spec({
                   value: 12,
                 },
               })
-            );
+            )
           }
         },
       },
     }),
     "Deve rodar sem erros": check((ctx) => {
-      assert.ok(ctx.response.isOk);
+      assert.ok(ctx.response.isOk)
     }),
     "Deve retornar o preço justo": check((ctx) => {
-      assert.ok(ctx.response.value.precoJusto == "155.88");
+      assert.ok(ctx.response.value.precoJusto == "155.88")
     }),
   }),
 
@@ -56,9 +56,9 @@ const calculaPrecoJustoSpec = spec({
           buscarPrecoAcao(_) {
             const stock = Stock.fromJSON({
               lastprice: 100,
-            });
+            })
 
-            return Ok(stock);
+            return Ok(stock)
           }
 
           buscarIndicadoresAcao(_) {
@@ -71,16 +71,16 @@ const calculaPrecoJustoSpec = spec({
                   value: 12,
                 },
               })
-            );
+            )
           }
         },
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(!ctx.response.isOk);
+      assert.ok(!ctx.response.isOk)
     }),
     "Deve retornar mensagem de erro": check((ctx) => {
-      assert.deepEqual(ctx.response.err, "Ticker inválido");
+      assert.deepEqual(ctx.response.err, "Ticker inválido")
     }),
   }),
 
@@ -95,20 +95,20 @@ const calculaPrecoJustoSpec = spec({
                 symbol: ticker,
                 lastPrice: 0,
               })
-            );
+            )
           }
         },
       },
     }),
     "Deve retornar erro": check((ctx) => {
-      assert.ok(!ctx.response.isOk);
+      assert.ok(!ctx.response.isOk)
     }),
     "Deve retornar mensagem de erro": check((ctx) => {
-      assert.deepEqual(ctx.response.err, "Provavelmente o ticker está incorreto");
+      assert.deepEqual(ctx.response.err, "Provavelmente o ticker está incorreto")
     }),
   }),
-});
+})
 
 module.exports = herbarium.specs
   .add(calculaPrecoJustoSpec, "calculaPrecoJustoSpec")
-  .metadata({ usecase: "CalcularPrecoJusto" }).spec;
+  .metadata({ usecase: "CalcularPrecoJusto" }).spec
