@@ -3,10 +3,12 @@ const IndiceRepository = require("../../infra/database/indiceRepository")
 const { MFinanceClient } = require("../../infra/clients/mFinanceClient")
 const { herbarium } = require("@herbsjs/herbarium")
 const Stock = require("../entities/Stock")
+const verificaDiaUtil = require("./verificaDiaUtil")
 
 const dependency = {
   mfinance: MFinanceClient,
   indiceRepository: IndiceRepository,
+  verificaDiaUtilUsecase: verificaDiaUtil,
 }
 
 const fechamento = (injection) =>
@@ -25,16 +27,25 @@ const fechamento = (injection) =>
 
     setup: (ctx) => {
       ctx.di = Object.assign({}, dependency, injection)
+      ctx.di.verificaDiaUtilInstance = ctx.di.verificaDiaUtilUsecase(ctx.di)
       ctx.data = {}
       ctx.date = ctx.di.date || new Date()
     },
 
-    "Verifica a data atual": step((ctx) => {
+    "Verifica a data atual": step(async (ctx) => {
+      const { verificaDiaUtilInstance } = ctx.di
       const date = ctx.date
 
-      const diaDaSemana = date.getDay()
+      await verificaDiaUtilInstance.authorize()
 
-      if (diaDaSemana === 0 || diaDaSemana === 6) return Err("Hoje não é um dia útil")
+      const ucResponse = await verificaDiaUtilInstance.run({ dateToVerify: date })
+
+      if (ucResponse.isErr) return Err("Houve um erro ao verificar se a data de hoje é dia útil")
+
+      const { isWeekend, isHoliday, holiday } = ucResponse.ok
+
+      if (isWeekend) return Err("Hoje não é um dia útil")
+      if (isHoliday) return Err(`Hoje não é um dia útil: ${holiday}`)
 
       const dataAtual = date.toLocaleDateString("pt-BR")
       ctx.data.dataAtual = dataAtual
