@@ -40,7 +40,8 @@ const alteraCadastroTemplate = `{{#if estavaCadastrado}}Olá {{nome}}, o chat at
 {{/if}}
 `
 
-const priceTemplate = "O preço da ação {{ticker}} é R$ {{lastPrice}} sendo a variação no dia de {{change}}%"
+const priceTemplate =
+  "O preço da ação {{ticker}} é R$ {{lastPrice}} sendo a variação no dia de {{change}}%"
 
 const grahamTemplate = `O preço justo da ação {{ticker}} segundo a fórmula de graham é:
 R$ {{precoJusto}}

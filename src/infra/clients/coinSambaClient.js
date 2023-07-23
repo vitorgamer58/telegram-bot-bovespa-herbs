@@ -10,7 +10,7 @@ class CoinSambaClient {
     const { axios } = this._di
 
     this._axios = axios.create({
-      baseURL: "https://api.coinsamba.com/v0/"
+      baseURL: "https://api.coinsamba.com/v0/",
     })
   }
 
@@ -19,8 +19,8 @@ class CoinSambaClient {
       .get("index", {
         params: {
           base: "BTC",
-          quote: "BRL"
-        }
+          quote: "BRL",
+        },
       })
       .then(({ data }) => Ok(data))
       .catch((error) => Err(error))
