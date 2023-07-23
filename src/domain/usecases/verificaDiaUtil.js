@@ -55,22 +55,26 @@ const verificaDiaUtil = (injection) =>
     }),
 
     "Verifica se a data atual é um feriado": step(async (ctx) => {
-      const { holidayRepositoryInstance } = ctx.di
-      const { dateToVerify } = ctx.req
+      try {
+        const { holidayRepositoryInstance } = ctx.di
+        const { dateToVerify } = ctx.req
 
-      const dataAtual = dateToVerify.toLocaleDateString("pt-BR")
-      const ddmmyyyy = dataAtual
+        const dataAtual = dateToVerify.toLocaleDateString("pt-BR")
+        const ddmmyyyy = dataAtual
 
-      const [holiday] = await holidayRepositoryInstance.find({ filter: { ddmmyyyy } })
+        const [holiday] = await holidayRepositoryInstance.find({ filter: { ddmmyyyy } })
 
-      if (!checker.isEmpty(holiday)) {
-        ctx.ret.isHoliday = true
-        ctx.ret.holiday = holiday.holiday
+        if (!checker.isEmpty(holiday)) {
+          ctx.ret.isHoliday = true
+          ctx.ret.holiday = holiday.holiday
+          return Ok()
+        }
+
+        ctx.ret.isHoliday = false
         return Ok()
+      } catch (error) {
+        return Err(`Erro na camada de banco de dados: ${error.message}`)
       }
-
-      ctx.ret.isHoliday = false
-      return Ok()
     }),
   })
 
