@@ -41,7 +41,7 @@ const fechamentoSpec = spec({
             return [
               Holiday.fromJSON({
                 ddmmyyyy: "25/07/2023",
-                holiday: "Feriado qualquer",
+                description: "Feriado qualquer",
               }),
             ]
           }

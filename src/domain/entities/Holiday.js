@@ -4,7 +4,7 @@ const { herbarium } = require("@herbsjs/herbarium")
 const Holiday = entity("Holiday", {
   id: id(String),
   ddmmyyyy: field(String),
-  holiday: field(String),
+  description: field(String),
 })
 
 module.exports = herbarium.entities.add(Holiday, "Holiday").entity

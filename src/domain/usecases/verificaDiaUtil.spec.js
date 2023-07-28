@@ -15,7 +15,7 @@ const VerificaDiaUtilSpec = spec({
       injection: {
         holidayRepository: class {
           find() {
-            return [undefined]
+            return []
           }
         },
       },
@@ -42,7 +42,7 @@ const VerificaDiaUtilSpec = spec({
             return [
               Holiday.fromJSON({
                 ddmmyyyy: "25/07/2023",
-                holiday: "Feriado qualquer",
+                description: "Feriado qualquer",
               }),
             ]
           }
@@ -68,7 +68,7 @@ const VerificaDiaUtilSpec = spec({
       injection: {
         holidayRepository: class {
           find() {
-            return [undefined]
+            return []
           }
         },
       },

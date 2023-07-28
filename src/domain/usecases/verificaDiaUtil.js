@@ -66,7 +66,7 @@ const verificaDiaUtil = (injection) =>
 
         if (!checker.isEmpty(holiday)) {
           ctx.ret.isHoliday = true
-          ctx.ret.holiday = holiday.holiday
+          ctx.ret.holiday = holiday.description
           return Ok()
         }
 
