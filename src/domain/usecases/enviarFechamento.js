@@ -66,18 +66,14 @@ const enviarFechamento = (injection) =>
       const { bot } = ctx.di
       const errors = []
 
-      await Promise.all(
-        clientes.map(async (cliente) => {
-          try {
-            await bot.telegram.sendMessage(cliente.chat_id, mensagem)
-          } catch (error) {
-            console.log(
-              `Erro ao enviar mensagem para o cliente ${cliente.chat_id}: ${error.message}`
-            )
-            errors.push({ cliente, error })
-          }
-        })
-      )
+      for (const cliente of clientes) {
+        try {
+          await bot.telegram.sendMessage(cliente.chat_id, mensagem)
+        } catch (error) {
+          console.log(`Erro ao enviar mensagem para o cliente ${cliente.chat_id}: ${error.message}`)
+          errors.push({ cliente, error })
+        }
+      }
 
       ctx.data.errors = errors
 
