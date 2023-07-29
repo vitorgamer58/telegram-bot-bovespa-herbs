@@ -59,14 +59,13 @@ const verificaDiaUtil = (injection) =>
         const { holidayRepositoryInstance } = ctx.di
         const { dateToVerify } = ctx.req
 
-        const dataAtual = dateToVerify.toLocaleDateString("pt-BR")
-        const ddmmyyyy = dataAtual
+        const ddmmyyyy = dateToVerify.toLocaleDateString("pt-BR")
 
-        const [holiday] = await holidayRepositoryInstance.find({ filter: { ddmmyyyy } })
+        const dbResponse = await holidayRepositoryInstance.find({ filter: { ddmmyyyy } })
 
-        if (!checker.isEmpty(holiday)) {
+        if (!checker.isEmpty(dbResponse)) {
           ctx.ret.isHoliday = true
-          ctx.ret.holiday = holiday.description
+          ctx.ret.holiday = dbResponse[0].description
           return Ok()
         }
 

@@ -19,7 +19,7 @@ const fechamentoSpec = spec({
         date: new Date(2023, 5, 21),
         holidayRepository: class {
           find() {
-            return [undefined]
+            return null
           }
         },
       },
@@ -65,7 +65,7 @@ const fechamentoSpec = spec({
         date: new Date(2023, 5, 25),
         holidayRepository: class {
           find() {
-            return [undefined]
+            return null
           }
         },
       },
@@ -89,7 +89,7 @@ const fechamentoSpec = spec({
         date: new Date(2023, 5, 21),
         holidayRepository: class {
           find() {
-            return [undefined]
+            return null
           }
         },
       },
@@ -113,7 +113,7 @@ const fechamentoSpec = spec({
         date: new Date(2023, 5, 21),
         holidayRepository: class {
           find() {
-            return [undefined]
+            return null
           }
         },
       },

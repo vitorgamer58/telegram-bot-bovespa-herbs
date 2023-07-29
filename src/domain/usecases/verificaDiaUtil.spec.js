@@ -15,7 +15,7 @@ const VerificaDiaUtilSpec = spec({
       injection: {
         holidayRepository: class {
           find() {
-            return []
+            return null
           }
         },
       },
@@ -68,7 +68,7 @@ const VerificaDiaUtilSpec = spec({
       injection: {
         holidayRepository: class {
           find() {
-            return []
+            return null
           }
         },
       },
