@@ -30,6 +30,8 @@ const cronJobs = (bot) => {
 
         const ucResponse = await enviarFechamentoInstance.run()
 
+        console.log(enviarFechamentoInstance.auditTrail)
+
         if (ucResponse.err) await enviaMensagemErro(bot, `Erro usecase: ${ucResponse.err}`)
       } catch (error) {
         await enviaMensagemErro(bot, `Erro ao enviar o fechamento do dia: ${error.message}`)
