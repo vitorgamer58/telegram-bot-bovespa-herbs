@@ -37,7 +37,6 @@ const buscaPreco = (injection) =>
       if (dadosDePrecoRequest.isErr) return Err(`Erro ao buscar dados da ação ${ticker}`)
 
       const stock = dadosDePrecoRequest.ok
-      if (!stock.isValid()) return Err("Provavelmente o ticker está incorreto")
 
       return Ok((ctx.ret = stock))
     }),
