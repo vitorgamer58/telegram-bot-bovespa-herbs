@@ -1,4 +1,4 @@
-const { usecase, step, Ok, Err } = require("@herbsjs/herbs")
+const { usecase, step, Ok, Err, checker } = require("@herbsjs/herbs")
 const ClientRepository = require("../../infra/database/clientRepository")
 const { herbarium } = require("@herbsjs/herbarium")
 const Client = require("../entities/Client")
@@ -27,9 +27,9 @@ const obterClientes = (injection) =>
 
         const clients = await clientRepository.find({})
 
-        ctx.ret.clientes = clients
+        if (checker.isEmpty(clients)) return Ok((ctx.ret.clientes = []))
 
-        return Ok()
+        return Ok((ctx.ret.clientes = clients))
       } catch (error) {
         return Err(`Erro na camada de banco de dados: ${error.message}`)
       }
