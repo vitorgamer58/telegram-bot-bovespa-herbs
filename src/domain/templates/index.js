@@ -20,11 +20,6 @@ Confira os dados de fechamento do pregão!🦈
 {{#each maioresBaixas}}
 {{emojiForIndex @index}}️ {{this.symbol}} {{this.change}}%
 {{/each}}
-
-💥 MAIS NEGOCIADAS DO PREGÃO
-{{#each maisNegociadas}}
-{{emojiForIndex @index}}️ {{this.symbol}} {{this.change}}%
-{{/each}}
 `
 
 const startTemplate = `Bem vindo {{firstName}}, eu sou um robô, alguns dos meus comandos são:
