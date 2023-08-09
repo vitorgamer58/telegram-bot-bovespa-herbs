@@ -29,7 +29,7 @@
     "prettier": "^3.0.0"
   },
   "dependencies": {
-    "@herbsjs/herbarium": "^1.4.0",
+    "@herbsjs/herbarium": "^1.5.0",
     "@herbsjs/herbs": "^2.0.0",
     "@herbsjs/herbs2mongo": "^4.0.0",
     "axios": "^1.1.2",
