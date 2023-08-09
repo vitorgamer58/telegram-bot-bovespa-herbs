@@ -107,6 +107,9 @@ const fechamento = (injection) =>
       const baixas = acoesNoIbov.filter((acao) => acao.change < 0)
 
       ctx.data.maioresAltas = altas.slice(0, 5)
+
+      baixas.sort((a, b) => a.change - b.change)
+
       ctx.data.maioresBaixas = baixas.slice(-5)
 
       return Ok()

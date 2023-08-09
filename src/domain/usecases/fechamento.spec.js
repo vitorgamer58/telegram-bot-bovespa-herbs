@@ -27,6 +27,22 @@ const fechamentoSpec = spec({
     "Deve rodar sem erros": check((ctx) => {
       assert.ok(ctx.response.isOk)
     }),
+    "Deve retornar o array de altas do maior para o menor": check((ctx) => {
+      const maioresAltas = ctx.response.ok.maioresAltas
+
+      const primeiraEmpresa = maioresAltas[0]
+      const ultimaEmpresa = maioresAltas[maioresAltas.length - 1]
+
+      assert.ok(primeiraEmpresa.change > ultimaEmpresa.change)
+    }),
+    "Deve retornar o array de baixas da maior para a menor": check((ctx) => {
+      const maioresBaixas = ctx.response.ok.maioresBaixas
+
+      const primeiraEmpresa = maioresBaixas[0]
+      const ultimaEmpresa = maioresBaixas[maioresBaixas.length - 1]
+
+      assert.ok(primeiraEmpresa.change < ultimaEmpresa.change)
+    }),
   }),
 
   "Não deve buscar o fechamento do dia se não for um feriado": scenario({
