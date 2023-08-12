@@ -1,7 +1,7 @@
 require("dotenv").config()
 const Handlebars = require("handlebars")
 const { Telegraf } = require("telegraf")
-const commandParts = require("../middlewares/telegraf-command-parts")
+const commandParts = require("@satsczar/telegraf-command-parts")
 const calcularPrecoJusto = require("../../domain/usecases/calcularPrecoJusto")
 const buscaPreco = require("../../domain/usecases/buscaPreco")
 const buscarFii = require("../../domain/usecases/buscaFii")
