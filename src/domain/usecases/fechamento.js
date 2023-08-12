@@ -110,7 +110,7 @@ const fechamento = (injection) =>
 
       baixas.sort((a, b) => a.change - b.change)
 
-      ctx.data.maioresBaixas = baixas.slice(-5)
+      ctx.data.maioresBaixas = baixas.slice(0, 5)
 
       return Ok()
     }),
